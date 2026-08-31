@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PowFinder AI | Ski Trip Planner & Seasonal Snow Forecaster</title>
+  <meta name="description" content="Discover the best ski resorts for you and your crew based on group dynamics, skill levels, trip goals, and seasonal long-range snowfall forecasts.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <!-- Ambient Snow Particle Canvas -->
+  <canvas id="snow-canvas"></canvas>
+
+  <div class="app-container">
+    <!-- Navigation / Header -->
+    <header class="app-header">
+      <a href="#" class="brand-logo" id="brand-logo">
+        <div class="brand-icon">🏔️</div>
+        <div class="brand-text">
+          <h1>POWFINDER AI</h1>
+          <p>Ski Trip Planner & Seasonal Snow Forecaster</p>
+        </div>
+      </a>
+
+      <!-- Live Climate Telemetry Indicator -->
+      <div class="live-weather-badge" id="header-live-badge">
+        <span class="pulse-dot"></span>
+        <span><strong>Live NOAA Outlook:</strong> Active El Niño (+2.03°C)</span>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="hero-section">
+      <h1 class="hero-title">Find the Gnarliest Lines & Deepest Snow for Your Crew</h1>
+      <p class="hero-subtitle">
+        Tell us about your group, skill level, and trip goals. Our seasonal weather models analyze regional storm tracks to curate your optimal top 3 ski destinations.
+      </p>
+    </section>
+
+    <!-- Main Wizard Card -->
+    <main class="wizard-card" id="wizard-section">
+      <!-- Progress Bar Tracker -->
+      <div class="wizard-progress">
+        <div class="progress-bar-fill"></div>
+        <div class="step-indicator active" data-step="1" id="step-ind-1">
+          <div class="step-bubble">1</div>
+          <span class="step-title">Skill & Crew</span>
+        </div>
+        <div class="step-indicator" data-step="2" id="step-ind-2">
+          <div class="step-bubble">2</div>
+          <span class="step-title">Trip Goal</span>
+        </div>
+        <div class="step-indicator" data-step="3" id="step-ind-3">
+          <div class="step-bubble">3</div>
+          <span class="step-title">Snow & Season</span>
+        </div>
+        <div class="step-indicator" data-step="4" id="step-ind-4">
+          <div class="step-bubble">4</div>
+          <span class="step-title">Travel & Pass</span>
+        </div>
+      </div>
+
+      <!-- Step 1: Skill Level & Crew -->
+      <div class="wizard-step active" data-step="1" id="step-1">
+        <div class="step-header">
+          <h2>1. What's your group's skill level & size?</h2>
+          <p>We'll ensure the terrain profile fits everyone in your crew.</p>
+        </div>
+
+        <div class="option-grid">
+          <div class="option-card" data-field="skillLevel" data-value="beginner">
+            <div class="card-icon">🌱</div>
+            <div class="card-title">Beginner</div>
+            <div class="card-desc">Wide green runs, dedicated learning areas, gentle magic carpets, and top-tier ski schools.</div>
+          </div>
+          <div class="option-card" data-field="skillLevel" data-value="intermediate">
+            <div class="card-icon">🎿</div>
+            <div class="card-title">Intermediate</div>
+            <div class="card-desc">Miles of manicured blue groomers, open bowls, and scenic ridge cruisers.</div>
+          </div>
+          <div class="option-card selected" data-field="skillLevel" data-value="advanced">
+            <div class="card-icon">⚡</div>
+            <div class="card-title">Advanced / Expert</div>
+            <div class="card-desc">Steep chutes, cliff drops, gladed tree runs, hike-to bowls, and backcountry gates.</div>
+          </div>
+        </div>
+
+        <div class="form-group" style="max-width: 400px;">
+          <label class="form-label" for="input-group-size">Group Size / Crew Makeup</label>
+          <input type="text" id="input-group-size" class="text-input" placeholder="e.g. 4 buddies, 8 friends, solo hound" value="4 buddies">
+        </div>
+      </div>
+
+      <!-- Step 2: Trip Mission & Vibe -->
+      <div class="wizard-step" data-step="2" id="step-2">
+        <div class="step-header">
+          <h2>2. What is the primary mission of the trip?</h2>
+          <p>Match the mountain vibe and town atmosphere to your group's energy.</p>
+        </div>
+
+        <div class="option-grid">
+          <div class="option-card selected" data-field="groupGoal" data-value="gnarly-lines">
+            <div class="card-icon">🏔️</div>
+            <div class="card-title">Hunt Deep Powder & Steeps</div>
+            <div class="card-desc">First chair to last call. Focused on bagging vertical, chasing storms, and skiing extreme lines.</div>
+          </div>
+          <div class="option-card" data-field="groupGoal" data-value="party-apres">
+            <div class="card-icon">🍻</div>
+            <div class="card-title">Epic Après-Ski & Nightlife</div>
+            <div class="card-desc">Table-dancing champagne parties, craft breweries, energetic bars, and live mountain DJs.</div>
+          </div>
+          <div class="option-card" data-field="groupGoal" data-value="friends-vacation">
+            <div class="card-icon">🔥</div>
+            <div class="card-title">Time with Friends & Cabin Chill</div>
+            <div class="card-desc">Balanced days on the mountain, hot tubs, great group dinners, and relaxing mountain town charm.</div>
+          </div>
+          <div class="option-card" data-field="groupGoal" data-value="family-convenient">
+            <div class="card-icon">🏡</div>
+            <div class="card-title">All-Around Convenience</div>
+            <div class="card-desc">Ski-in/ski-out lodging, heated walkways, easy amenities, and hassle-free logistics.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Snow Quality & Weather Priority -->
+      <div class="wizard-step" data-step="3" id="step-3">
+        <div class="step-header">
+          <h2>3. Snow quality & seasonal timing preference</h2>
+          <p>How important is deep powder versus guaranteed conditions?</p>
+        </div>
+
+        <div class="option-grid">
+          <div class="option-card selected" data-field="snowPriority" data-value="powder">
+            <div class="card-icon">❄️</div>
+            <div class="card-title">Maximum Powder (400"+)</div>
+            <div class="card-desc">Prioritize resorts with the highest forecasted snowfall totals and microclimate storms.</div>
+          </div>
+          <div class="option-card" data-field="snowPriority" data-value="groomers">
+            <div class="card-icon">🚜</div>
+            <div class="card-title">Reliable Grooming & Base</div>
+            <div class="card-desc">High base elevations and massive snowmaking systems for consistent snowpack regardless of weather.</div>
+          </div>
+          <div class="option-card" data-field="snowPriority" data-value="flexible">
+            <div class="card-icon">☀️</div>
+            <div class="card-title">Bluebird & Spring Sun</div>
+            <div class="card-desc">Sunny skies, soft spring corn snow, long patio afternoons, and great weather.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Travel Logistics & Pass Affiliation -->
+      <div class="wizard-step" data-step="4" id="step-4">
+        <div class="step-header">
+          <h2>4. Departure city, travel mode & season pass</h2>
+          <p>We'll calculate realistic flight and drive routes from your home base.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+          <div class="form-group">
+            <label class="form-label" for="input-home-location">Home Location / Departure Airport</label>
+            <input type="text" id="input-home-location" class="text-input" placeholder="e.g. San Francisco, CA or New York, NY" value="San Francisco, CA">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Season Pass Affiliation</label>
+            <div class="option-grid" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 0;">
+              <div class="option-card selected" data-field="passAffiliation" data-value="any" style="padding: 0.8rem; text-align: center;">
+                <div class="card-title" style="font-size: 0.9rem;">Any / None</div>
+              </div>
+              <div class="option-card" data-field="passAffiliation" data-value="Ikon" style="padding: 0.8rem; text-align: center;">
+                <div class="card-title" style="font-size: 0.9rem; color: #f87171;">Ikon</div>
+              </div>
+              <div class="option-card" data-field="passAffiliation" data-value="Epic" style="padding: 0.8rem; text-align: center;">
+                <div class="card-title" style="font-size: 0.9rem; color: #60a5fa;">Epic</div>
+              </div>
+              <div class="option-card" data-field="passAffiliation" data-value="Independent" style="padding: 0.8rem; text-align: center;">
+                <div class="card-title" style="font-size: 0.9rem; color: #4ade80;">Indy</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Travel Preference</label>
+          <div class="option-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+            <div class="option-card" data-field="travelMode" data-value="drive">
+              <div class="card-icon">🚗</div>
+              <div class="card-title">Drive-Only</div>
+              <div class="card-desc">Prefer road tripping within driving distance of home base.</div>
+            </div>
+            <div class="option-card selected" data-field="travelMode" data-value="fly">
+              <div class="card-icon">✈️</div>
+              <div class="card-title">Fly + Quick Shuttle</div>
+              <div class="card-desc">Willing to fly to major mountain hubs with short transfers (< 1h).</div>
+            </div>
+            <div class="option-card" data-field="travelMode" data-value="anywhere">
+              <div class="card-icon">🚀</div>
+              <div class="card-title">Anywhere for Deep Snow</div>
+              <div class="card-desc">Maximum flexibility to travel wherever the storms land.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Actions -->
+      <div class="wizard-actions">
+        <button id="btn-wizard-prev" class="btn btn-secondary" style="visibility: hidden;">
+          ← Previous
+        </button>
+        <button id="btn-wizard-next" class="btn btn-primary">
+          Continue →
+        </button>
+      </div>
+    </main>
+
+    <!-- Results Section: Top 3 Curated Recommendations -->
+    <section class="results-container" id="results-section">
+      <div class="results-header">
+        <div>
+          <h2>🏆 Top 3 Curated Ski Recommendations</h2>
+          <p>Ranked using your crew's preferences and our seasonal storm track forecast engine.</p>
+        </div>
+        <div style="display: flex; gap: 0.75rem;">
+          <button id="btn-copy-itinerary" class="btn btn-secondary">
+            📋 Copy Trip Summary
+          </button>
+          <button id="btn-restart-wizard" class="btn btn-primary">
+            🔄 Adjust Preferences
+          </button>
+        </div>
+      </div>
+
+      <!-- Top 3 Dynamic Cards Grid -->
+      <div class="top3-grid" id="top3-cards-grid">
+        <!-- Injected via app.js -->
+      </div>
+
+      <!-- Dynamic Live Seasonal Outlook Card (Shown right below recommendations) -->
+      <div class="dynamic-enso-card" id="dynamic-enso-card" style="margin-top: 1rem;">
+        <div class="enso-card-header">
+          <div class="enso-live-indicator">
+            <span class="live-pulse-dot"></span> LIVE NOAA SEASONAL CLIMATE RADAR
+          </div>
+          <span class="enso-badge-tag" id="enso-status-tag">⚡ El Niño Advisory (Active)</span>
+        </div>
+        <div class="enso-card-body">
+          <div class="enso-metric-row">
+            <div class="enso-metric">
+              <div class="enso-m-label">Niño-3.4 SST Index</div>
+              <div class="enso-m-val" id="enso-sst-val">+2.03°C (Super El Niño Phase)</div>
+            </div>
+            <div class="enso-metric">
+              <div class="enso-m-label">Winter Projection Confidence</div>
+              <div class="enso-m-val" id="enso-conf-val">>90% Probability through Winter 2026-27</div>
+            </div>
+          </div>
+          <p class="enso-summary" id="enso-summary-text">
+            PowFinder AI automatically detects and models the active NOAA Climate Prediction Center outlook. A strong subtropical jet stream is projected to deliver heavy atmospheric river cycles to the Sierra Nevada, Utah Wasatch, and Southern Rockies.
+          </p>
+          <div class="enso-favored-box">
+            <strong style="color: var(--accent-cyan);">🎯 Statistically Favored Regions (Factored Automatically):</strong>
+            <div class="favored-tags" id="enso-favored-tags">
+              <span class="f-tag">California / Sierra Nevada (Mammoth, Palisades Tahoe)</span>
+              <span class="f-tag">Utah Wasatch Front (Snowbird, Alta, Park City)</span>
+              <span class="f-tag">Southern & Central Colorado (Telluride, Crested Butte, Vail)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comparison Matrix Section -->
+    <section class="comparison-section" id="comparison-section">
+      <div class="comparison-header">
+        <div>
+          <h3>📊 Resort Comparison Matrix</h3>
+          <p style="color: var(--text-secondary); font-size: 0.9rem;">Compare stats, snowfall projections, and terrain profiles across 16 major destinations.</p>
+        </div>
+        <div class="filter-pills">
+          <button class="filter-pill active" data-filter="all">All Resorts</button>
+          <button class="filter-pill" data-filter="ikon">Ikon Pass</button>
+          <button class="filter-pill" data-filter="epic">Epic Pass</button>
+          <button class="filter-pill" data-filter="indy">Indy / Independent</button>
+          <button class="filter-pill" data-filter="steeps">Gnarly Steeps (45%+ Expert)</button>
+          <button class="filter-pill" data-filter="apres">Top Après-Ski</button>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="resort-table">
+          <thead>
+            <tr>
+              <th>Resort & Region</th>
+              <th>Pass</th>
+              <th>Seasonal Snow</th>
+              <th>Vertical</th>
+              <th>Acreage</th>
+              <th>% Expert</th>
+              <th>Peak Months</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="comparison-table-body">
+            <!-- Injected via app.js -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- Resort Details Modal Dialog -->
+  <div class="modal-overlay" id="resort-modal">
+    <div class="modal-dialog">
+      <button class="modal-close" id="modal-close-btn">&times;</button>
+      <div id="modal-dynamic-content">
+        <!-- Injected via app.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Alert -->
+  <div class="toast-msg" id="toast-notification"></div>
+
+  <!-- Application Script -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

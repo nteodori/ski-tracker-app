@@ -1,0 +1,19 @@
+{
+  "name": "powfinder-ai-ski-planner",
+  "version": "1.0.0",
+  "description": "Ski Trip Planner & Seasonal Snow Forecaster Web Application",
+  "main": "index.html",
+  "scripts": {
+    "dev": "npx -y serve . -p 3000",
+    "start": "npx -y serve . -p 3000"
+  },
+  "keywords": [
+    "ski",
+    "powder",
+    "snow-forecast",
+    "trip-planner",
+    "antigravity-skills"
+  ],
+  "author": "Antigravity",
+  "license": "Apache-2.0"
+}
