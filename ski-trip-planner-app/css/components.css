@@ -272,6 +272,29 @@
   margin-bottom: 2rem;
 }
 
+/* 5-Item Balanced Grid (Step 2 Trip Goals) */
+.option-grid-5 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 980px) {
+  .option-grid-5 {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (min-width: 600px) and (max-width: 979px) {
+  .option-grid-5 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .option-grid-5 .option-card:last-child {
+    grid-column: span 2;
+  }
+}
+
 .option-card {
   position: relative;
   background: var(--bg-glass);
