@@ -3,7 +3,7 @@
  * Coordinates Wizard Intake, Engine Scoring, Dynamic Results, Modals, & Exports
  */
 
-import { RESORTS } from './resortsData.js';
+import { RESORTS, HELI_LUXURY_EXPEDITIONS } from './resortsData.js';
 import { WeatherMatchingEngine } from './weatherEngine.js';
 import { initSnowCanvas } from './snowCanvas.js';
 
@@ -193,10 +193,22 @@ class SkiPlannerApp {
   calculateAndRenderResults() {
     this.currentResults = this.engine.evaluateResorts(this.preferences);
     const top3 = this.currentResults.slice(0, 3);
+    const isHeliMode = this.preferences.groupGoal === "heli-luxury";
 
     const resultsContainer = document.getElementById("results-section");
-    const wizardContainer = document.getElementById("wizard-section");
     const top3Grid = document.getElementById("top3-cards-grid");
+    const resultsHeader = document.querySelector("#results-section .section-header h2");
+    const resultsSub = document.querySelector("#results-section .section-header p");
+
+    if (resultsHeader && resultsSub) {
+      if (isHeliMode) {
+        resultsHeader.textContent = "🏆 Top 3 Heli-Ski & Luxury Snowcat Expeditions";
+        resultsSub.textContent = "Private helicopter charters, untracked backcountry tenures, and 5-star mountain chalets ranked for your crew.";
+      } else {
+        resultsHeader.textContent = "🏆 Top 3 Recommended Ski Destinations";
+        resultsSub.textContent = "Ranked and curated by our matching engine using real-time NOAA seasonal forecasts.";
+      }
+    }
 
     if (!top3Grid || !resultsContainer) return;
 
@@ -205,8 +217,12 @@ class SkiPlannerApp {
       const forecast = item.forecast;
       const rankNum = index + 1;
       const badgeClass = rankNum === 1 ? "badge-gold" : (rankNum === 2 ? "badge-silver" : "badge-bronze");
-      const medalIcon = rankNum === 1 ? "🥇 #1 Top Pick" : (rankNum === 2 ? "🥈 #2 Pick" : "🥉 #3 Pick");
-      const passBadgeClass = r.pass === "Ikon" ? "badge-ikon" : (r.pass === "Epic" ? "badge-epic" : "badge-ind");
+      const medalIcon = isHeliMode 
+        ? (rankNum === 1 ? "🥇 #1 Top Expedition" : (rankNum === 2 ? "🥈 #2 Top Expedition" : "🥉 #3 Top Expedition"))
+        : (rankNum === 1 ? "🥇 #1 Top Pick" : (rankNum === 2 ? "🥈 #2 Pick" : "🥉 #3 Pick"));
+      
+      const passBadgeClass = isHeliMode ? "badge-ikon" : (r.pass === "Ikon" ? "badge-ikon" : (r.pass === "Epic" ? "badge-epic" : "badge-ind"));
+      const passLabel = isHeliMode ? `🚁 ${r.experienceType}` : `${r.pass} Pass`;
 
       return `
         <div class="resort-card rank-${rankNum}">
@@ -218,30 +234,30 @@ class SkiPlannerApp {
                 <h3 class="resort-name">${r.name}</h3>
                 <div class="resort-location">📍 ${r.region}</div>
               </div>
-              <span class="table-pass-badge ${passBadgeClass}">${r.pass} Pass</span>
+              <span class="table-pass-badge ${passBadgeClass}">${passLabel}</span>
             </div>
 
             <div class="match-score-pill">
               <span>🎯</span>
-              <span>${item.matchPercentage}% Crew Match</span>
+              <span>${item.matchPercentage}% ${isHeliMode ? 'Expedition Match' : 'Crew Match'}</span>
             </div>
 
             <div class="stat-pill-grid">
               <div class="stat-box">
-                <div class="stat-label">Projected Snow</div>
-                <div class="stat-value" style="color: var(--accent-cyan);">${forecast.projectedSnowfall}" / yr</div>
+                <div class="stat-label">${isHeliMode ? 'Tenure Size' : 'Projected Snow'}</div>
+                <div class="stat-value" style="color: var(--accent-cyan);">${isHeliMode ? `${(r.tenureAcres || r.skiableAcres).toLocaleString()} ac` : `${forecast.projectedSnowfall}" / yr`}</div>
               </div>
               <div class="stat-box">
-                <div class="stat-label">Vertical Drop</div>
-                <div class="stat-value">${r.verticalDrop.toLocaleString()} ft</div>
+                <div class="stat-label">${isHeliMode ? 'Daily Vert Guarantee' : 'Vertical Drop'}</div>
+                <div class="stat-value" style="font-size: ${isHeliMode ? '0.85rem' : '1.1rem'};">${isHeliMode ? (r.dailyVertGuarantee || '15,000 ft') : `${r.verticalDrop.toLocaleString()} ft`}</div>
               </div>
               <div class="stat-box">
-                <div class="stat-label">Skiable Terrain</div>
-                <div class="stat-value">${r.skiableAcres.toLocaleString()} ac</div>
+                <div class="stat-label">${isHeliMode ? 'Aircraft / Fleet' : 'Skiable Terrain'}</div>
+                <div class="stat-value" style="font-size: ${isHeliMode ? '0.8rem' : '1.1rem'};">${isHeliMode ? (r.aircraftFleet || 'Eurocopter AStar') : `${r.skiableAcres.toLocaleString()} ac`}</div>
               </div>
               <div class="stat-box">
                 <div class="stat-label">Best Window</div>
-                <div class="stat-value" style="font-size: 0.9rem;">${r.bestMonths.join(", ")}</div>
+                <div class="stat-value" style="font-size: 0.85rem;">${r.bestMonths.join(", ")}</div>
               </div>
             </div>
 
@@ -249,27 +265,34 @@ class SkiPlannerApp {
               ${forecast.narrative}
             </div>
 
-            <div class="terrain-bar-container">
-              <div class="terrain-bar-header">
-                <span>Terrain Breakdown</span>
-                <span>${r.terrain.advanced}% Advanced/Expert</span>
+            ${isHeliMode && r.luxuryLodge ? `
+              <div style="background: rgba(217, 119, 6, 0.12); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-sm); padding: 0.75rem 0.9rem; margin-bottom: 1rem;">
+                <div style="font-size: 0.75rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase;">🏰 5-Star Luxury Chalet & Lodging</div>
+                <div style="font-size: 0.85rem; color: #fef08a; margin-top: 0.2rem; line-height: 1.4;">${r.luxuryLodge.split('(')[0]}</div>
               </div>
-              <div class="terrain-bar">
-                <div class="t-green" style="width: ${r.terrain.beginner}%;" title="Beginner: ${r.terrain.beginner}%"></div>
-                <div class="t-blue" style="width: ${r.terrain.intermediate}%;" title="Intermediate: ${r.terrain.intermediate}%"></div>
-                <div class="t-black" style="width: ${r.terrain.advanced}%;" title="Advanced: ${r.terrain.advanced}%"></div>
+            ` : `
+              <div class="terrain-bar-container">
+                <div class="terrain-bar-header">
+                  <span>Terrain Breakdown</span>
+                  <span>${r.terrain.advanced}% Advanced/Expert</span>
+                </div>
+                <div class="terrain-bar">
+                  <div class="t-green" style="width: ${r.terrain.beginner}%;" title="Beginner: ${r.terrain.beginner}%"></div>
+                  <div class="t-blue" style="width: ${r.terrain.intermediate}%;" title="Intermediate: ${r.terrain.intermediate}%"></div>
+                  <div class="t-black" style="width: ${r.terrain.advanced}%;" title="Advanced: ${r.terrain.advanced}%"></div>
+                </div>
               </div>
-            </div>
+            `}
 
             <div style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.25rem;">
-              <strong>⚡ Signature Run:</strong> ${r.signatureRun}<br>
+              <strong>${isHeliMode ? '✨ VIP Inclusions:' : '⚡ Signature Run:'}</strong> ${isHeliMode ? (r.inclusions ? r.inclusions.slice(0, 2).join(' • ') : 'Private guides & airbag packs') : r.signatureRun}<br>
               <strong>✈️ Travel:</strong> ${r.nearestAirport} (${r.airportDriveMins}m drive)
             </div>
           </div>
 
           <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
             <button class="btn btn-secondary btn-view-details" data-id="${r.id}" style="width: 100%; justify-content: center; font-size: 0.85rem;">
-              🔍 View Full Guide & Après
+              ${isHeliMode ? '🚁 View Expedition Dossier & VIP Booking' : '🔍 View Full Guide & Après'}
             </button>
           </div>
         </div>
@@ -367,7 +390,7 @@ class SkiPlannerApp {
   }
 
   openResortModal(resortId) {
-    const resort = RESORTS.find(r => r.id === resortId);
+    const resort = RESORTS.find(r => r.id === resortId) || HELI_LUXURY_EXPEDITIONS.find(e => e.id === resortId);
     if (!resort) return;
 
     const forecastSummary = this.engine.getForecastSummary(resort);
@@ -377,8 +400,9 @@ class SkiPlannerApp {
 
     if (!modal || !modalContent) return;
 
+    const isExpedition = !!resort.experienceType;
     const timing = resort.bestTimingGuide || {
-      powderWindow: `${resort.bestMonths.join(", ")} (Peak seasonal storm track)`,
+      powderWindow: `${(resort.bestMonths || ["Jan", "Feb"]).join(", ")} (Peak seasonal storm track)`,
       crowdFreeWindow: "Mid-week Tuesday–Thursday throughout January and early March",
       topEvents: []
     };
@@ -406,34 +430,55 @@ class SkiPlannerApp {
 
     modalContent.innerHTML = `
       <div style="margin-bottom: 1.5rem;">
-        <span class="table-pass-badge" style="margin-bottom: 0.5rem;">${resort.pass} Pass Affiliated</span>
+        <span class="table-pass-badge badge-ikon" style="margin-bottom: 0.5rem;">${isExpedition ? `🚁 ${resort.experienceType}` : `${resort.pass} Pass Affiliated`}</span>
         <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; color: white;">${resort.name}</h2>
-        <div style="color: var(--accent-cyan); font-weight: 600; font-size: 0.9rem;">📍 ${resort.region} (${resort.state})</div>
+        <div style="color: var(--accent-cyan); font-weight: 600; font-size: 0.9rem;">📍 ${resort.region} (${resort.state}${resort.country ? `, ${resort.country}` : ''})</div>
       </div>
 
       <p style="color: var(--text-secondary); line-height: 1.6; margin-bottom: 1.5rem;">
         ${resort.description}
       </p>
 
-      <!-- Key Mountain Stats Grid -->
+      <!-- Key Stats Grid -->
       <div class="stat-pill-grid" style="margin-bottom: 1.5rem;">
         <div class="stat-box">
-          <div class="stat-label">Summit / Base Elevation</div>
-          <div class="stat-value">${resort.elevation.summit.toLocaleString()}' / ${resort.elevation.base.toLocaleString()}'</div>
+          <div class="stat-label">${isExpedition ? 'Backcountry Tenure' : 'Summit / Base Elevation'}</div>
+          <div class="stat-value">${isExpedition ? `${(resort.tenureAcres || resort.skiableAcres).toLocaleString()} ac` : `${resort.elevation.summit.toLocaleString()}' / ${resort.elevation.base.toLocaleString()}'`}</div>
         </div>
         <div class="stat-box">
-          <div class="stat-label">Continuous Vertical</div>
-          <div class="stat-value">${resort.verticalDrop.toLocaleString()} ft</div>
+          <div class="stat-label">${isExpedition ? 'Daily Vert Guarantee' : 'Continuous Vertical'}</div>
+          <div class="stat-value" style="font-size: ${isExpedition ? '0.95rem' : '1.1rem'};">${isExpedition ? (resort.dailyVertGuarantee || '15,000 ft') : `${resort.verticalDrop.toLocaleString()} ft`}</div>
         </div>
         <div class="stat-box">
-          <div class="stat-label">Total Skiable Acres</div>
-          <div class="stat-value">${resort.skiableAcres.toLocaleString()} ac</div>
+          <div class="stat-label">${isExpedition ? 'Aircraft / Fleet' : 'Total Skiable Acres'}</div>
+          <div class="stat-value" style="font-size: ${isExpedition ? '0.85rem' : '1.1rem'};">${isExpedition ? (resort.aircraftFleet || 'Eurocopter AStar') : `${resort.skiableAcres.toLocaleString()} ac`}</div>
         </div>
         <div class="stat-box">
           <div class="stat-label">Seasonal Snow Projection</div>
           <div class="stat-value" style="color: var(--accent-cyan);">${detailed.projectedAnnualSnow} in (Avg: ${resort.annualSnowfall}")</div>
         </div>
       </div>
+
+      ${isExpedition ? `
+        <!-- Dedicated Expedition Inclusions Card -->
+        <div style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.18), rgba(15, 23, 42, 0.95)); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 0 25px rgba(245, 158, 11, 0.15);">
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.2rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            🚁 Expedition Charter & Luxury Inclusions
+          </h3>
+          <p style="font-size: 0.9rem; color: #fef08a; line-height: 1.5; margin-bottom: 0.75rem;">
+            <strong>Backcountry Territory:</strong> ${resort.tenureDescription || 'Exclusive wilderness tenure'}
+          </p>
+          <p style="font-size: 0.85rem; color: #e2e8f0; line-height: 1.5; margin-bottom: 1rem;">
+            <strong>🏰 5-Star Private Lodging:</strong> ${resort.luxuryLodge || 'Exclusive 5-star mountain chalet'}
+          </p>
+          <div style="font-size: 0.75rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 0.4rem;">
+            ✨ What's Included:
+          </div>
+          <ul style="color: var(--text-secondary); font-size: 0.85rem; padding-left: 1.2rem; line-height: 1.6;">
+            ${(resort.inclusions || ['Private ACMG certified guides', 'BCA avalanche airbag packs', 'Gourmet mountain lunches', 'Apres champagne reception']).map(inc => `<li><strong>${inc}</strong></li>`).join('')}
+          </ul>
+        </div>
+      ` : ''}
 
       <!-- Context-Aware Short-Term Status Card -->
       <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">

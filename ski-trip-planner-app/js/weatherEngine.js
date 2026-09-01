@@ -1,10 +1,10 @@
 /**
  * Ski Trip Planner Weather & Matching Engine
  * Evaluates seasonal ENSO forecasts, SNOTEL telemetry, sub-seasonal teleconnections,
- * and context-aware short/long-term mountain forecasts.
+ * resort preference matching, and dedicated Heli-Ski / Snowcat backcountry operations.
  */
 
-import { RESORTS } from './resortsData.js';
+import { RESORTS, HELI_LUXURY_EXPEDITIONS } from './resortsData.js';
 
 /**
  * Live NOAA Climate Prediction Center ENSO Diagnostic Outlook
@@ -40,35 +40,35 @@ export class WeatherMatchingEngine {
   }
 
   /**
-   * Calculates projected seasonal snowfall for a resort given current climate cycle.
+   * Calculates projected seasonal snowfall for a resort or expedition given current climate cycle.
    */
-  getProjectedSnowfall(resort) {
+  getProjectedSnowfall(item) {
     let multiplier = 1.0;
     if (this.currentClimateState === "la-nina") {
-      multiplier = resort.laNinaFactor;
+      multiplier = item.laNinaFactor || 1.0;
     } else if (this.currentClimateState === "el-nino") {
-      multiplier = resort.elNinoFactor;
+      multiplier = item.elNinoFactor || 1.0;
     } else {
       multiplier = 1.0; // Neutral
     }
-    return Math.round(resort.annualSnowfall * multiplier);
+    return Math.round(item.annualSnowfall * multiplier);
   }
 
   /**
    * Calculates Snow-to-Liquid Ratio (SLR) and snow density
    */
-  calculateSLR(resort) {
+  calculateSLR(item) {
     let baseSLR = 15.0;
-    if (resort.state === "UT" || resort.id === "steamboat") {
+    if (item.state === "UT" || item.id === "steamboat" || item.id === "steamboat-powdercats" || item.id === "powderbird-wasatch") {
       baseSLR = 20.0; // Utah & Steamboat champagne powder
-    } else if (resort.state === "CO" || resort.state === "WY" || resort.state === "MT") {
+    } else if (item.state === "CO" || item.state === "WY" || item.state === "MT") {
       baseSLR = 16.5; // Dry Continental Rockies
-    } else if (resort.state === "CA") {
+    } else if (item.state === "CA") {
       baseSLR = 11.5; // High-moisture Sierra snowpack (superb base builder)
-    } else if (resort.state === "WA" || resort.state === "BC") {
-      baseSLR = 12.0; // Maritime Pacific Northwest / Coast Range
+    } else if (item.state === "WA" || item.state === "BC") {
+      baseSLR = 14.5; // Interior BC / Coast Range
     } else {
-      baseSLR = 12.0;
+      baseSLR = 13.0;
     }
 
     const density = Math.round(1000 / baseSLR);
@@ -88,18 +88,16 @@ export class WeatherMatchingEngine {
 
   /**
    * Generates a context-aware Short & Long-Term Meteorological Forecast.
-   * Dynamically adjusts based on current month (e.g. August/Pre-Season vs January/Winter).
    */
   getDetailedForecastAnalysis(resort) {
-    const currentMonthNum = new Date().getMonth(); // 0 = Jan, 7 = Aug, 11 = Dec
+    const currentMonthNum = new Date().getMonth();
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     const currentMonthName = monthNames[currentMonthNum];
 
-    const isPreSeason = currentMonthNum >= 4 && currentMonthNum <= 9; // May to October
+    const isPreSeason = currentMonthNum >= 4 && currentMonthNum <= 9;
     const projectedSnow = this.getProjectedSnowfall(resort);
     const slr = this.calculateSLR(resort);
 
-    // Monthly distribution breakdown
     const monthlyCurve = {
       "Nov": Math.round(projectedSnow * 0.10),
       "Dec": Math.round(projectedSnow * 0.20),
@@ -111,7 +109,6 @@ export class WeatherMatchingEngine {
 
     let shortTermOutlook = {};
     if (isPreSeason) {
-      // Off-Season / Pre-Season (e.g. August/September)
       shortTermOutlook = {
         timeframe: `Current Pre-Season Status (${currentMonthName})`,
         headline: "Off-Season Mountain Baseline & Autumn Transition",
@@ -122,7 +119,6 @@ export class WeatherMatchingEngine {
         operationalReadiness: "Pre-season terrain maintenance & snowmaking infrastructure testing active."
       };
     } else {
-      // Active Winter Season (November to April)
       shortTermOutlook = {
         timeframe: "Active Winter 7–14 Day Radar",
         headline: "Mid-Winter Storm Track & Cold Air Influx",
@@ -134,28 +130,30 @@ export class WeatherMatchingEngine {
       };
     }
 
-    // Long-Term Seasonal Forecast (Looking ahead to 2026-27 winter)
     let longRangeNarrative = "";
     let convictionScore = "85%";
     if (this.currentClimateState === "el-nino") {
-      if (resort.elNinoFactor >= 1.10) {
-        longRangeNarrative = `🔥 Major Beneficiary: El Niño subtropical jet stream is positioned to steer high-volume Pacific atmospheric rivers into ${resort.region}. Projected ${projectedSnow}" seasonal snowfall (${Math.round((resort.elNinoFactor - 1) * 100)}% above 30-year median).`;
+      if ((resort.elNinoFactor || 1.0) >= 1.10) {
+        longRangeNarrative = `🔥 Major Beneficiary: El Niño subtropical jet stream is positioned to steer high-volume Pacific atmospheric rivers into ${resort.region}. Projected ${projectedSnow}" seasonal snowfall (${Math.round(((resort.elNinoFactor || 1.0) - 1) * 100)}% above 30-year median).`;
         convictionScore = "92% High Conviction";
       } else {
-        longRangeNarrative = `❄️ Consistent Base: Steady mid-winter cold storm waves with prime snow preservation due to ${resort.name}'s high summit elevation (${resort.elevation.summit.toLocaleString()} ft).`;
+        longRangeNarrative = `❄️ Consistent Base: Steady mid-winter cold storm waves with prime snow preservation across ${resort.name}.`;
         convictionScore = "82% Moderate-High Conviction";
       }
     } else {
-      longRangeNarrative = `📊 Normal Historical Distribution: Standard winter storm cadence across ${resort.bestMonths.join(", ")}.`;
+      longRangeNarrative = `📊 Normal Historical Distribution: Standard winter storm cadence across ${(resort.bestMonths || ["Jan", "Feb"]).join(", ")}.`;
       convictionScore = "80% Baseline Conviction";
     }
+
+    const elevSummit = resort.elevation ? resort.elevation.summit : 11000;
+    const elevBase = resort.elevation ? resort.elevation.base : 7000;
 
     return {
       resortId: resort.id,
       resortName: resort.name,
       state: resort.state,
       region: resort.region,
-      elevation: resort.elevation,
+      elevation: resort.elevation || { base: elevBase, summit: elevSummit },
       projectedAnnualSnow: projectedSnow,
       historicalAverage: resort.annualSnowfall,
       diffPercent: Math.round(((projectedSnow - resort.annualSnowfall) / resort.annualSnowfall) * 100),
@@ -167,38 +165,149 @@ export class WeatherMatchingEngine {
         projectedTotalInches: projectedSnow,
         convictionScore,
         narrative: longRangeNarrative,
-        bestMonths: resort.bestMonths,
+        bestMonths: resort.bestMonths || ["January", "February"],
         monthlyCurve,
-        peakPowderWindow: `${resort.bestMonths[0]} through ${resort.bestMonths[resort.bestMonths.length - 1]}`
+        peakPowderWindow: `${(resort.bestMonths || ["Jan"])[0]} through ${(resort.bestMonths || ["Feb"])[(resort.bestMonths || ["Feb"]).length - 1]}`
       },
       slr,
       snotel: {
-        stationName: `${resort.name} SNOTEL Index`,
-        elevationFt: resort.elevation.base + Math.round((resort.elevation.summit - resort.elevation.base) * 0.6),
-        climateZone: resort.climateZone,
+        stationName: `${resort.name} Backcountry SNOTEL Index`,
+        elevationFt: elevBase + Math.round((elevSummit - elevBase) * 0.6),
+        climateZone: resort.climateZone || "Alpine Backcountry",
         baselineMedianSWE: `${Math.round(projectedSnow * 0.085)}" SWE`,
-        basePreservationRating: resort.elevation.base >= 8000 ? "⭐⭐⭐⭐⭐ Ultra-High Snow Preservation" : "⭐⭐⭐⭐ Reliable Cold Storage"
+        basePreservationRating: elevBase >= 8000 ? "⭐⭐⭐⭐⭐ Ultra-High Snow Preservation" : "⭐⭐⭐⭐ Reliable Cold Storage"
       }
     };
   }
 
   /**
-   * Generates a descriptive forecast highlight for the resort.
+   * Generates a descriptive forecast highlight for a resort or expedition.
    */
-  getForecastSummary(resort) {
-    const analysis = this.getDetailedForecastAnalysis(resort);
+  getForecastSummary(item) {
+    const analysis = this.getDetailedForecastAnalysis(item);
     return {
       projectedSnowfall: analysis.projectedAnnualSnow,
-      historicalAverage: resort.annualSnowfall,
+      historicalAverage: item.annualSnowfall,
       diffPercent: analysis.diffPercent,
-      bestMonths: resort.bestMonths,
+      bestMonths: item.bestMonths || ["January", "February"],
       narrative: analysis.longTerm.narrative,
       detailed: analysis
     };
   }
 
   /**
-   * Scores candidate resorts based on user preferences.
+   * Evaluates and scores dedicated Heli-Skiing & Snowcat Luxury Expeditions.
+   */
+  evaluateHeliExpeditions(preferences) {
+    const {
+      skillLevel = "advanced",
+      snowPriority = "powder",
+      travelMode = "fly",
+      homeLocation = "San Francisco, CA"
+    } = preferences;
+
+    const scored = HELI_LUXURY_EXPEDITIONS.map(expedition => {
+      let score = 0;
+      let scoreBreakdown = [];
+
+      // 1. Backcountry Tenure & Vertical Drop (Max 35 pts)
+      let tenurePts = 20;
+      if (expedition.tenureAcres >= 300000) tenurePts = 35; // Colossal Heli Tenure (Selkirk, Whistler, High Mountain)
+      else if (expedition.tenureAcres >= 100000) tenurePts = 30;
+      else if (expedition.operatorType === "cat") tenurePts = 28; // Private Cat Buyouts
+      score += tenurePts;
+      scoreBreakdown.push({ label: "Backcountry Tenure & Vert", pts: tenurePts });
+
+      // 2. Snow Quality & Projected Powder (Max 30 pts)
+      const forecast = this.getForecastSummary(expedition);
+      let snowPts = 20;
+      if (forecast.projectedSnowfall >= 450) snowPts = 30;
+      else if (forecast.projectedSnowfall >= 350) snowPts = 26;
+      else snowPts = 22;
+      score += snowPts;
+      scoreBreakdown.push({ label: "Powder Outlook & Deep Snow", pts: snowPts });
+
+      // 3. Ultra-Luxury Lodging & Private Aircraft / Fleet (Max 25 pts)
+      let luxuryPts = 23;
+      if (expedition.luxuryLodge.includes("Chalet") || expedition.luxuryLodge.includes("Lodge") || expedition.luxuryLodge.includes("Auberge")) {
+        luxuryPts = 25;
+      }
+      score += luxuryPts;
+      scoreBreakdown.push({ label: "5-Star Chalet & Aircraft Fleet", pts: luxuryPts });
+
+      // 4. Logistics & Airport Distance (Max 10 pts)
+      let travelPts = 8;
+      if (expedition.airportDriveMins <= 30) travelPts = 10;
+      else if (expedition.airportDriveMins <= 90) travelPts = 8;
+      else travelPts = 6;
+      score += travelPts;
+      scoreBreakdown.push({ label: "Travel & Transfer Logistics", pts: travelPts });
+
+      const matchPercentage = Math.min(99, Math.max(82, score));
+
+      return {
+        resort: {
+          id: expedition.id,
+          name: expedition.name,
+          region: expedition.region,
+          state: expedition.state,
+          country: expedition.country,
+          pass: "Heli / Cat Luxury Expedition",
+          annualSnowfall: expedition.annualSnowfall,
+          verticalDrop: parseInt(expedition.dailyVertGuarantee.replace(/[^0-9]/g, '')) || 15000,
+          skiableAcres: expedition.tenureAcres,
+          elevation: { base: 6000, summit: 13500 },
+          terrain: { beginner: 0, intermediate: 15, advanced: 85 },
+          vibe: expedition.vibe,
+          signatureRun: `Untracked Backcountry Drops (${expedition.dailyVertGuarantee})`,
+          nearestAirport: expedition.nearestAirport,
+          airportDriveMins: expedition.airportDriveMins,
+          nearestMajorHub: expedition.nearestAirport,
+          apresHighlights: [
+            "Private Chef Multi-Course Dinners",
+            "Sommelier Wine Cellar & Champagne Receptions",
+            "Slopeside Heated Saltwater Pools & Spas"
+          ],
+          heliAndLuxury: {
+            hasHeli: expedition.operatorType === "heli",
+            operator: `${expedition.name} (${expedition.aircraftFleet})`,
+            luxuryHighlights: `${expedition.luxuryLodge}. Includes: ${expedition.inclusions.join(", ")}.`
+          },
+          bestTimingGuide: {
+            powderWindow: `${expedition.bestMonths.join(" & ")} (Peak flyability and deepest blower snowpack)`,
+            crowdFreeWindow: "100% Zero Lift Lines (Exclusive private backcountry tenure)",
+            topEvents: [
+              { name: "Private Helicopter Powder Safari", timing: "Mid-Winter", desc: "Private chartered AStar B3 flights across untracked glacier bowls." },
+              { name: "Gourmet Alpine Hut Dining", timing: "Daily", desc: "Private executive chef multi-course tasting menus." }
+            ]
+          },
+          description: expedition.description,
+          // Expedition specifics
+          isExpedition: true,
+          experienceType: expedition.experienceType,
+          operatorType: expedition.operatorType,
+          tenureAcres: expedition.tenureAcres,
+          tenureDescription: expedition.tenureDescription,
+          dailyVertGuarantee: expedition.dailyVertGuarantee,
+          aircraftFleet: expedition.aircraftFleet,
+          luxuryLodge: expedition.luxuryLodge,
+          packageType: expedition.packageType,
+          inclusions: expedition.inclusions
+        },
+        score,
+        matchPercentage,
+        scoreBreakdown,
+        forecast,
+        isExpedition: true
+      };
+    });
+
+    scored.sort((a, b) => b.score - a.score);
+    return scored;
+  }
+
+  /**
+   * Scores candidate resorts or luxury expeditions based on user preferences.
    */
   evaluateResorts(preferences) {
     const {
@@ -210,7 +319,12 @@ export class WeatherMatchingEngine {
       passAffiliation = "any"
     } = preferences;
 
-    // Hard Pass Filter: Strictly evaluate ONLY resorts on the selected pass
+    // IF Epic Splurge / Heli-Luxury is selected, evaluate dedicated Heli-Ski & Snowcat operations!
+    if (groupGoal === "heli-luxury") {
+      return this.evaluateHeliExpeditions(preferences);
+    }
+
+    // Standard Resort Evaluation
     let candidateResorts = RESORTS;
     if (passAffiliation && passAffiliation !== "any") {
       const passTarget = passAffiliation.toLowerCase();
@@ -248,11 +362,7 @@ export class WeatherMatchingEngine {
 
       // 2. Vibe & Trip Goal Match (Max 25 pts)
       let vibePts = 5;
-      if (groupGoal === "heli-luxury") {
-        if (resort.vibe.includes("heli-luxury")) vibePts += 14;
-        if (resort.heliAndLuxury && resort.heliAndLuxury.hasHeli) vibePts += 8;
-        else if (resort.heliAndLuxury) vibePts += 4;
-      } else if (groupGoal === "gnarly-lines") {
+      if (groupGoal === "gnarly-lines") {
         if (resort.vibe.includes("gnarly-steeps")) vibePts += 15;
         if (resort.vibe.includes("powder-hunting")) vibePts += 5;
       } else if (groupGoal === "party-apres") {
