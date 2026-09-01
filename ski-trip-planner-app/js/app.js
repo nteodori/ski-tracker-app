@@ -370,11 +370,39 @@ class SkiPlannerApp {
     const resort = RESORTS.find(r => r.id === resortId);
     if (!resort) return;
 
-    const forecast = this.engine.getForecastSummary(resort);
+    const forecastSummary = this.engine.getForecastSummary(resort);
+    const detailed = forecastSummary.detailed;
     const modal = document.getElementById("resort-modal");
     const modalContent = document.getElementById("modal-dynamic-content");
 
     if (!modal || !modalContent) return;
+
+    const timing = resort.bestTimingGuide || {
+      powderWindow: `${resort.bestMonths.join(", ")} (Peak seasonal storm track)`,
+      crowdFreeWindow: "Mid-week Tuesday–Thursday throughout January and early March",
+      topEvents: []
+    };
+
+    const luxury = resort.heliAndLuxury;
+    const shortTerm = detailed.shortTerm;
+    const longTerm = detailed.longTerm;
+    const slr = detailed.slr;
+    const snotel = detailed.snotel;
+
+    // Build monthly accumulation bar chart
+    const maxMonthlySnow = Math.max(...Object.values(longTerm.monthlyCurve));
+    const monthlyBarsHtml = Object.entries(longTerm.monthlyCurve).map(([month, inches]) => {
+      const heightPct = Math.round((inches / maxMonthlySnow) * 100);
+      return `
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.3rem; flex: 1;">
+          <span style="font-size: 0.75rem; font-weight: 700; color: var(--accent-cyan);">${inches}"</span>
+          <div style="width: 100%; height: 50px; background: rgba(255,255,255,0.05); border-radius: 4px; display: flex; align-items: flex-end; overflow: hidden;">
+            <div style="width: 100%; height: ${heightPct}%; background: linear-gradient(to top, var(--accent-blue), var(--accent-cyan)); border-radius: 2px;"></div>
+          </div>
+          <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600;">${month}</span>
+        </div>
+      `;
+    }).join('');
 
     modalContent.innerHTML = `
       <div style="margin-bottom: 1.5rem;">
@@ -387,6 +415,7 @@ class SkiPlannerApp {
         ${resort.description}
       </p>
 
+      <!-- Key Mountain Stats Grid -->
       <div class="stat-pill-grid" style="margin-bottom: 1.5rem;">
         <div class="stat-box">
           <div class="stat-label">Summit / Base Elevation</div>
@@ -402,15 +431,144 @@ class SkiPlannerApp {
         </div>
         <div class="stat-box">
           <div class="stat-label">Seasonal Snow Projection</div>
-          <div class="stat-value" style="color: var(--accent-cyan);">${forecast.projectedSnowfall} in</div>
+          <div class="stat-value" style="color: var(--accent-cyan);">${detailed.projectedAnnualSnow} in (Avg: ${resort.annualSnowfall}")</div>
         </div>
       </div>
 
-      <div class="forecast-highlight-box" style="margin-bottom: 1.5rem;">
-        <strong>❄️ Long-Range Seasonal Outlook:</strong><br>
-        ${forecast.narrative}
+      <!-- Context-Aware Short-Term Status Card -->
+      <div style="background: rgba(15, 23, 42, 0.75); border: 1px solid var(--border-glass); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+          <span style="font-size: 0.75rem; font-weight: 800; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em;">
+            🌤️ ${shortTerm.timeframe}
+          </span>
+          <span style="font-size: 0.75rem; background: rgba(255,255,255,0.08); padding: 0.2rem 0.6rem; border-radius: var(--radius-full); color: #cbd5e1;">
+            ${shortTerm.temperatureRange}
+          </span>
+        </div>
+        <h4 style="color: white; font-size: 1rem; margin-bottom: 0.3rem;">${shortTerm.headline}</h4>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.5rem;">
+          ${shortTerm.currentSnowState} ${shortTerm.autumnTransition}
+        </p>
+        <div style="font-size: 0.8rem; color: var(--accent-cyan);">
+          📅 <strong>Historical First Dusting:</strong> ${shortTerm.historicalFirstSnow}
+        </div>
       </div>
 
+      <!-- Long-Range 2026-27 Seasonal Forecast Card -->
+      <div style="background: linear-gradient(135deg, rgba(14, 116, 144, 0.2), rgba(15, 23, 42, 0.95)); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 0 25px rgba(56, 189, 248, 0.15);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 0.4rem;">
+            ❄️ ${longTerm.season}
+          </h3>
+          <span style="font-size: 0.75rem; background: rgba(56, 189, 248, 0.2); color: var(--accent-cyan); padding: 0.2rem 0.75rem; border-radius: var(--radius-full); font-weight: 700;">
+            ${longTerm.convictionScore}
+          </span>
+        </div>
+
+        <p style="font-size: 0.9rem; color: #e2e8f0; line-height: 1.55; margin-bottom: 1.25rem;">
+          ${longTerm.narrative}
+        </p>
+
+        <!-- Monthly Snow Accumulation Curve -->
+        <div style="background: rgba(0,0,0,0.35); border-radius: var(--radius-sm); padding: 1rem; margin-bottom: 1.25rem;">
+          <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 0.75rem; display: flex; justify-content: space-between;">
+            <span>Projected Monthly Snow Accumulation</span>
+            <span style="color: var(--accent-cyan);">${longTerm.projectedTotalInches}" Total</span>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: flex-end;">
+            ${monthlyBarsHtml}
+          </div>
+        </div>
+
+        <!-- SNOTEL & SLR Telemetry Row -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.75rem;">
+          <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 0.75rem 0.9rem;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">📡 SNOTEL Telemetry Index</div>
+            <div style="font-size: 0.9rem; font-weight: 700; color: #fff; margin-top: 0.2rem;">${snotel.stationName} (${snotel.elevationFt}' elev)</div>
+            <div style="font-size: 0.75rem; color: #86efac; margin-top: 0.15rem;">${snotel.basePreservationRating}</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 0.75rem 0.9rem;">
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">🔬 Snow-to-Liquid Ratio (SLR)</div>
+            <div style="font-size: 0.9rem; font-weight: 700; color: var(--accent-cyan); margin-top: 0.2rem;">${slr.ratio} (${slr.waterContent} moisture)</div>
+            <div style="font-size: 0.75rem; color: #cbd5e1; margin-top: 0.15rem;">${slr.classification}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Best Times to Visit Section -->
+      <div style="background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.9)); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 0 20px rgba(56, 189, 248, 0.15);">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.75rem;">
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700; color: white; display: flex; align-items: center; gap: 0.5rem;">
+            📅 Best Times to Visit
+          </h3>
+          <span style="font-size: 0.75rem; background: rgba(56, 189, 248, 0.15); color: var(--accent-cyan); padding: 0.2rem 0.6rem; border-radius: var(--radius-full); font-weight: 600;">
+            Weather + Events + Crowds
+          </span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <!-- Powder Window -->
+          <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 0.85rem 1rem; border-left: 3px solid var(--accent-cyan);">
+            <div style="font-size: 0.75rem; font-weight: 700; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">
+              ❄️ Deep Powder & Snowpack Window
+            </div>
+            <div style="font-size: 0.9rem; color: #f8fafc; font-weight: 600;">
+              ${timing.powderWindow}
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem;">
+              Peak storm cadence projected during ${longTerm.peakPowderWindow} with active El Niño subtropical storm tracks.
+            </div>
+          </div>
+
+          <!-- Least Crowded Window -->
+          <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 0.85rem 1rem; border-left: 3px solid #22c55e;">
+            <div style="font-size: 0.75rem; font-weight: 700; color: #4ade80; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">
+              🧘 Least Crowded / Zero Lift-Line Windows
+            </div>
+            <div style="font-size: 0.9rem; color: #f8fafc; font-weight: 600;">
+              ${timing.crowdFreeWindow}
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.2rem;">
+              Ideal for wide-open groomers, fast lap times, and effortless parking/lodging reservations.
+            </div>
+          </div>
+
+          <!-- Events & Festivals -->
+          ${timing.topEvents && timing.topEvents.length > 0 ? `
+            <div style="background: rgba(0,0,0,0.3); border-radius: var(--radius-sm); padding: 0.85rem 1rem; border-left: 3px solid var(--accent-gold);">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--accent-gold); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
+                🎉 Fun Mountain Festivals & Events
+              </div>
+              <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 0.5rem;">
+                ${timing.topEvents.map(e => `
+                  <li style="font-size: 0.85rem; color: #e2e8f0;">
+                    <strong style="color: white;">${e.name}</strong> <span style="color: var(--accent-gold); font-size: 0.8rem;">(${e.timing})</span> — ${e.desc}
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+
+      <!-- Heli-Skiing & Luxury Splurge Section -->
+      ${luxury ? `
+        <div style="background: linear-gradient(135deg, rgba(217, 119, 6, 0.15), rgba(15, 23, 42, 0.9)); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: var(--radius-md); padding: 1.5rem; margin-bottom: 1.5rem;">
+          <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            🚁 Epic Splurge: Heli-Skiing & Ultra-Luxury
+          </h3>
+          ${luxury.operator ? `
+            <p style="font-size: 0.9rem; color: #fef08a; line-height: 1.5; margin-bottom: 0.6rem;">
+              <strong>Backcountry / Heli Operator:</strong> ${luxury.operator}
+            </p>
+          ` : ''}
+          <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+            <strong>5-Star Lodging & VIP Experience:</strong> ${luxury.luxuryHighlights}
+          </p>
+        </div>
+      ` : ''}
+
+      <!-- Après-Ski Hotspots -->
       <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem; margin-bottom: 1.5rem;">
         <h4 style="color: white; margin-bottom: 0.5rem; font-size: 1rem;">🍻 Top Après-Ski & Hotspots</h4>
         <ul style="color: var(--text-secondary); font-size: 0.9rem; padding-left: 1.2rem; line-height: 1.6;">
@@ -418,6 +576,7 @@ class SkiPlannerApp {
         </ul>
       </div>
 
+      <!-- Travel Logistics -->
       <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
         <h4 style="color: white; margin-bottom: 0.5rem; font-size: 1rem;">✈️ Travel Logistics & Hubs</h4>
         <p style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.5;">

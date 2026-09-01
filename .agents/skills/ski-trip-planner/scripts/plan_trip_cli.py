@@ -52,6 +52,7 @@ def collect_preferences():
         "3. What is the primary goal of the trip?",
         ["Time with friends / Relaxed vacation",
          "Ski the gnarliest lines & hunt deep powder",
+         "Epic splurge: Heli-skiing, private cat-skiing & ultra-luxury chalets",
          "Apres-ski, nightlife, and village party scene",
          "Family-friendly & all-around convenience"]
     )

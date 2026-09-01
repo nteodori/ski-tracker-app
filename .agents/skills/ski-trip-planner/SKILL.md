@@ -26,6 +26,7 @@ When initiating trip planning, check if the user has provided the essential crit
 3. **Primary Trip Goal**:
    - *Time with friends / Relaxed vacation*
    - *Ski the gnarliest lines & hunt deep powder*
+   - *Epic splurge: Heli-skiing, private cat-skiing & ultra-luxury chalets*
    - *Apres-ski, nightlife, and village party scene*
    - *Family-friendly & all-around convenience*
 4. **Snow Quality Priority**:
@@ -49,15 +50,18 @@ Before finalizing recommendations, evaluate the seasonal and long-range winter f
    - **Central & Southern Rockies (Colorado, New Mexico)**: Check elevation advantages and mid-winter storm tracks.
    - **Sierra Nevada (California / Nevada)**: Gauge potential atmospheric river snow accumulation vs base elevation.
    - **Northeast (Vermont, Maine, NH)**: Evaluate snowmaking infrastructure and mid-winter cold fronts.
-3. **Identify Peak Timing**:
-   - Pinpoint which months (e.g., December early-season, January deep freeze, February powder peak, or March/April spring sun & snowpack base) offer the highest probability of peak snow for each region.
+3. **Identify Peak Timing & Crowd Avoidance**:
+   - **Deep Powder Window**: Historical peak snow dates + current seasonal forecast multiplier.
+   - **Least Crowded Dates**: Midweek windows (Tuesday–Thursday) and post-holiday lulls (Jan 5–18) for zero lift lines.
+   - **Top Events & Festivals**: World Cup races, big air comps, spring pond skims, and mountain music festivals.
 
 ---
 
 ### Step 3: Filter & Match Resorts
 Cross-reference the user's criteria against candidate resort profiles (see [Resort Profiles Reference](references/resort_profiles.md)):
 - Match terrain ratios (% green, blue, black, double black) to group ability.
-- Align group goals (e.g., world-class steeps like Jackson Hole or Snowbird vs vibrant apres hubs like Whistler or Breckenridge).
+- Align group goals (e.g., world-class steeps like Jackson Hole or Snowbird vs vibrant apres hubs like Whistler vs luxury heli-ski hubs like Revelstoke or Telluride).
+- If a season pass is specified (Ikon, Epic, Indy), treat it as a hard filter.
 - Filter by travel feasibility from the user's home location.
 
 ---
@@ -69,11 +73,13 @@ Structure your response clearly with a countdown or top 3 list:
 # 🏔️ Top 3 Ski Trip Recommendations
 
 ### 🥇 1. [Resort Name, State/Province]
-* **The Vibe**: (e.g., Steep & Deep Powder Paradise / Ultimate Apres & Cruising)
+* **The Vibe**: (e.g., Steep & Deep Powder Paradise / Ultra-Luxury Heli-Ski Splurge)
 * **Terrain Match**: (How the terrain caters to beginner/intermediate/expert requirements)
-* **Seasonal Forecast & Best Timing**:
-  - **Snow Outlook**: Projected seasonal snowfall & storm track benefits
-  - **Best Month(s) to Visit**: Recommended window for optimal conditions
+* **📅 Best Times to Visit & Forecast Guide**:
+  - **❄️ Peak Powder Window**: (e.g., Jan 15 – Feb 28; projected snowfall with active ENSO forecast)
+  - **🧘 Least Crowded Window**: (e.g., Jan 6 – 18 post-holiday lull, midweek Tuesdays/Wednesdays)
+  - **🎉 Signature Mountain Events**: (e.g., Kings & Queens of Corbet's, Rendezvous Spring Festival)
+* **🚁 Heli-Skiing & Luxury Splurge**: (Operator details, cat-skiing, 5-star ski-in/ski-out chalets, private guides)
 * **Why It Fits Your Crew**: Explicit tie-back to the user's criteria (group size, goals, logistics)
 * **Travel Logistics**: Nearest airport, drive time from home location, pass compatibility (Ikon, Epic, Indy)
 

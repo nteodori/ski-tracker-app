@@ -1,0 +1,116 @@
+{
+  "resorts": {
+    "alta": {
+      "resortName": "Alta Ski Area",
+      "state": "UT",
+      "snotelStationId": "310:UT:SNTL",
+      "stationName": "Alta Guard",
+      "elevationFt": 8798,
+      "region": "Wasatch Front (Little Cottonwood Canyon)"
+    },
+    "snowbird": {
+      "resortName": "Snowbird",
+      "state": "UT",
+      "snotelStationId": "766:UT:SNTL",
+      "stationName": "Snowbird",
+      "elevationFt": 9177,
+      "region": "Wasatch Front (Little Cottonwood Canyon)"
+    },
+    "jackson-hole": {
+      "resortName": "Jackson Hole Mountain Resort",
+      "state": "WY",
+      "snotelStationId": "706:WY:SNTL",
+      "stationName": "Raymer",
+      "elevationFt": 9360,
+      "region": "Teton Range"
+    },
+    "palisades-tahoe": {
+      "resortName": "Palisades Tahoe",
+      "state": "CA",
+      "snotelStationId": "848:CA:SNTL",
+      "stationName": "Ward Creek #3",
+      "elevationFt": 6750,
+      "region": "North Lake Tahoe / Sierra Nevada"
+    },
+    "vail": {
+      "resortName": "Vail Ski Resort",
+      "state": "CO",
+      "snotelStationId": "842:CO:SNTL",
+      "stationName": "Vail Mountain",
+      "elevationFt": 10300,
+      "region": "Central Colorado Rockies"
+    },
+    "breckenridge": {
+      "resortName": "Breckenridge Ski Resort",
+      "state": "CO",
+      "snotelStationId": "531:CO:SNTL",
+      "stationName": "Hoosier Pass",
+      "elevationFt": 11400,
+      "region": "Summit County / Central Rockies"
+    },
+    "steamboat": {
+      "resortName": "Steamboat Ski Resort",
+      "state": "CO",
+      "snotelStationId": "825:CO:SNTL",
+      "stationName": "Tower",
+      "elevationFt": 10500,
+      "region": "Park Range / Northern Colorado"
+    },
+    "crested-butte": {
+      "resortName": "Crested Butte Mountain Resort",
+      "state": "CO",
+      "snotelStationId": "380:CO:SNTL",
+      "stationName": "Butte",
+      "elevationFt": 10160,
+      "region": "Gunnison / Elk Mountains"
+    },
+    "telluride": {
+      "resortName": "Telluride Ski Resort",
+      "state": "CO",
+      "snotelStationId": "815:CO:SNTL",
+      "stationName": "Telluride",
+      "elevationFt": 9510,
+      "region": "San Juan Mountains"
+    },
+    "big-sky": {
+      "resortName": "Big Sky Resort",
+      "state": "MT",
+      "snotelStationId": "590:MT:SNTL",
+      "stationName": "Lone Mountain",
+      "elevationFt": 8880,
+      "region": "Madison Range / Northern Rockies"
+    },
+    "mammoth": {
+      "resortName": "Mammoth Mountain",
+      "state": "CA",
+      "snotelStationId": "920:CA:SNTL",
+      "stationName": "Mammoth Pass",
+      "elevationFt": 9300,
+      "region": "Eastern Sierra Nevada"
+    },
+    "mt-baker": {
+      "resortName": "Mt. Baker Ski Area",
+      "state": "WA",
+      "snotelStationId": "909:WA:SNTL",
+      "stationName": "Wells Creek",
+      "elevationFt": 4000,
+      "region": "North Cascades"
+    },
+    "park-city": {
+      "resortName": "Park City Mountain",
+      "state": "UT",
+      "snotelStationId": "814:UT:SNTL",
+      "stationName": "Thaynes Canyon",
+      "elevationFt": 9237,
+      "region": "Wasatch Back"
+    },
+    "aspen-snowmass": {
+      "resortName": "Aspen Snowmass",
+      "state": "CO",
+      "snotelStationId": "709:CO:SNTL",
+      "stationName": "Roaring Fork",
+      "elevationFt": 10400,
+      "region": "Roaring Fork Valley"
+    }
+  }
+}
