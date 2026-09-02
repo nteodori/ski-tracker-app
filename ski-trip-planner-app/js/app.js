@@ -139,6 +139,13 @@ class SkiPlannerApp {
         if (targetStep <= this.currentStep || this.currentResults.length > 0) {
           this.currentStep = targetStep;
           this.updateWizardView();
+          const resultsSec = document.getElementById("results-section");
+          const wizardSec = document.getElementById("wizard-section");
+          if (resultsSec) resultsSec.style.display = "none";
+          if (wizardSec) {
+            wizardSec.style.display = "block";
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
         }
       });
     });
@@ -196,9 +203,10 @@ class SkiPlannerApp {
     const isHeliMode = this.preferences.groupGoal === "heli-luxury";
 
     const resultsContainer = document.getElementById("results-section");
+    const wizardContainer = document.getElementById("wizard-section");
     const top3Grid = document.getElementById("top3-cards-grid");
-    const resultsHeader = document.querySelector("#results-section .section-header h2");
-    const resultsSub = document.querySelector("#results-section .section-header p");
+    const resultsHeader = document.querySelector("#results-section .results-header h2");
+    const resultsSub = document.querySelector("#results-section .results-header p");
 
     if (resultsHeader && resultsSub) {
       if (isHeliMode) {
@@ -306,9 +314,10 @@ class SkiPlannerApp {
       });
     });
 
-    // Show results section
+    // Hide wizard and smoothly transition to results section
+    if (wizardContainer) wizardContainer.style.display = "none";
     resultsContainer.style.display = "block";
-    resultsContainer.scrollIntoView({ behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   bindTableFilters() {
