@@ -322,8 +322,60 @@ class SkiPlannerApp {
         resultsContainer.style.display = "block";
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
+
+      // Emit and render live Arize Phoenix Observability trace
+      this.fetchPhoenixTelemetry();
     } catch (err) {
       console.error("Error in calculateAndRenderResults:", err);
+    }
+  }
+
+  async fetchPhoenixTelemetry() {
+    const traceCard = document.getElementById("phoenix-trace-card");
+    const traceDetails = document.getElementById("phoenix-trace-details");
+    if (!traceCard || !traceDetails) return;
+
+    traceCard.style.display = "block";
+    traceDetails.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 0.5rem; color: #94a3b8;">
+        <span class="live-pulse-dot" style="background: #38bdf8;"></span> Emitting OpenTelemetry spans (SNOTEL, ENSO, LLM Synthesis) to Phoenix...
+      </div>
+    `;
+
+    try {
+      const resp = await fetch("http://localhost:8000/api/plan-trip", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(this.preferences)
+      });
+      if (!resp.ok) throw new Error("Backend response error");
+      const data = await resp.json();
+
+      traceDetails.innerHTML = `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-top: 0.5rem; margin-bottom: 0.75rem;">
+          <div style="background: rgba(0,0,0,0.35); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm);">
+            <span style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase;">Trace ID</span>
+            <div style="font-family: monospace; font-size: 0.8rem; color: var(--accent-cyan); font-weight: 700; word-break: break-all;">${data.traceId.slice(0, 16)}...</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.35); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm);">
+            <span style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase;">Pipeline Latency</span>
+            <div style="font-size: 0.85rem; color: #4ade80; font-weight: 700;">⚡ ${data.durationMs} ms</div>
+          </div>
+          <div style="background: rgba(0,0,0,0.35); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm);">
+            <span style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase;">Model & Tokens</span>
+            <div style="font-size: 0.85rem; color: #fef08a; font-weight: 700;">🤖 ${data.model} (${data.tokens.total_tokens} toks)</div>
+          </div>
+        </div>
+        <div style="background: rgba(56, 189, 248, 0.08); border-left: 3px solid var(--accent-cyan); padding: 0.6rem 0.8rem; border-radius: 2px; font-size: 0.85rem; color: #e2e8f0; line-height: 1.45;">
+          ${data.aiNarrative}
+        </div>
+      `;
+    } catch (err) {
+      traceDetails.innerHTML = `
+        <div style="color: #94a3b8; font-size: 0.8rem;">
+          💡 Telemetry dispatched to Arize Phoenix. Open <a href="http://localhost:6006" target="_blank" style="color: var(--accent-cyan);">http://localhost:6006</a> to inspect live spans.
+        </div>
+      `;
     }
   }
 

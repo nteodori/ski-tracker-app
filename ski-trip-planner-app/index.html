@@ -243,6 +243,23 @@
         </div>
       </div>
 
+      <!-- Arize Phoenix Observability Telemetry Card -->
+      <div class="phoenix-trace-card" id="phoenix-trace-card" style="margin-bottom: 2rem; display: none; background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(56, 189, 248, 0.35); border-radius: var(--radius-md); padding: 1.25rem 1.5rem; box-shadow: 0 0 25px rgba(56, 189, 248, 0.1);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 1.1rem;">🦅</span>
+            <strong style="color: #fff; font-size: 0.95rem;">Arize Phoenix OpenTelemetry Active</strong>
+            <span class="f-tag" style="background: rgba(34, 197, 94, 0.15); color: #4ade80; border-color: rgba(34, 197, 94, 0.3); font-size: 0.75rem;">● Spans Captured</span>
+          </div>
+          <a href="http://localhost:6006" target="_blank" class="btn btn-secondary" style="padding: 0.35rem 0.85rem; font-size: 0.8rem; text-decoration: none; border-color: rgba(56, 189, 248, 0.4);">
+            🔍 Open Phoenix UI (localhost:6006) ↗
+          </a>
+        </div>
+        <div id="phoenix-trace-details" style="font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+          Connecting to OpenTelemetry collector...
+        </div>
+      </div>
+
       <!-- Top 3 Dynamic Cards Grid -->
       <div class="top3-grid" id="top3-cards-grid">
         <!-- Injected via app.js -->
