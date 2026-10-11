@@ -447,7 +447,7 @@ export const RESORTS = [
     skiableAcres: 1547,
     elevation: { base: 9375, summit: 12162 },
     terrain: { beginner: 18, intermediate: 29, advanced: 53 },
-    vibe: ["gnarly-steeps", "chill-authentic", "powder-hunting"],
+    vibe: ["local-vibes", "gnarly-steeps", "chill-authentic", "powder-hunting"],
     climateZone: "Southern/Central Rockies",
     laNinaFactor: 0.95,
     elNinoFactor: 1.10,
@@ -519,7 +519,7 @@ export const RESORTS = [
     skiableAcres: 1000,
     elevation: { base: 3500, summit: 5087 },
     terrain: { beginner: 24, intermediate: 45, advanced: 31 },
-    vibe: ["powder-hunting", "gnarly-steeps", "chill-authentic"],
+    vibe: ["local-vibes", "powder-hunting", "gnarly-steeps", "chill-authentic"],
     climateZone: "Pacific Northwest",
     laNinaFactor: 1.30,
     elNinoFactor: 0.80,
@@ -578,6 +578,438 @@ export const RESORTS = [
       ]
     },
     description: "The largest ski resort in Eastern North America. Features 6 mountain peaks, colossal snowmaking firepower, and the legendary Access Road nightlife scene."
+  },
+  {
+    id: "sugar-bowl",
+    name: "Sugar Bowl Resort",
+    region: "California / Lake Tahoe (Donner Summit)",
+    state: "CA",
+    pass: "Independent",
+    annualSnowfall: 500,
+    verticalDrop: 1500,
+    skiableAcres: 1650,
+    elevation: { base: 6883, summit: 8383 },
+    terrain: { beginner: 17, intermediate: 45, advanced: 38 },
+    vibe: ["local-vibes", "chill-authentic", "powder-hunting", "gnarly-steeps"],
+    climateZone: "Sierra Nevada",
+    laNinaFactor: 0.95,
+    elNinoFactor: 1.20,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "The Palisades, Mt. Lincoln Chutes & Roller Pass",
+    nearestAirport: "Reno-Tahoe Intl (RNO)",
+    airportDriveMins: 45,
+    nearestMajorHub: "San Francisco, CA (3.0h drive / 180 mi via I-80)",
+    apresHighlights: ["The Belt Room Bar (Historic 1939 lounge)", "Sierra Vista Bar", "Village Lodge Dining Room"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "Sugar Bowl Backcountry Adventure Guides",
+      luxuryHighlights: "Historic snowbound Village Lodge (gondola-access only), private slopeside chalets, and uncrowded Donner Summit powder."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 15 – March 20 (Donner Summit microclimate creates massive Sierra storm dumps)",
+      crowdFreeWindow: "Mid-week Tuesday–Thursday (virtually empty lifts and untracked tree lines)",
+      topEvents: [
+        { name: "Silver Belt Freeride Classic", timing: "Late March", desc: "Historic freeride competition tracing roots back to 1940 down the steep Silver Belt Gully." },
+        { name: "Tiki Beach Spring Party", timing: "Mid-April", desc: "Spring deck celebration with live music, craft beers, and sun on Mt. Judah." }
+      ]
+    },
+    description: "Lake Tahoe's premier historic independent ski mountain atop Donner Summit. Renowned for 500 inches of annual snowfall, uncrowded lifts, classic steep chutes, and authentic California mountain heritage."
+  },
+  {
+    id: "kirkwood",
+    name: "Kirkwood Mountain Resort",
+    region: "California / Lake Tahoe & South Sierra",
+    state: "CA",
+    pass: "Epic",
+    annualSnowfall: 500,
+    verticalDrop: 2000,
+    skiableAcres: 2300,
+    elevation: { base: 7800, summit: 9800 },
+    terrain: { beginner: 12, intermediate: 30, advanced: 58 },
+    vibe: ["local-vibes", "gnarly-steeps", "powder-hunting", "chill-authentic"],
+    climateZone: "Sierra Nevada",
+    laNinaFactor: 0.95,
+    elNinoFactor: 1.22,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "The Wall (Chair 10), Once is Enough, & Eagle Bowl",
+    nearestAirport: "Reno-Tahoe Intl (RNO)",
+    airportDriveMins: 85,
+    nearestMajorHub: "San Francisco, CA (3.5h drive via CA-88)",
+    apresHighlights: ["7800 Bar & Grill", "Cornice Cantina", "Kirkwood Inn & Saloon (Est. 1864)"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "Kirkwood Expedition: Backcountry & Steep Clinic Guides",
+      luxuryHighlights: "Ski-in/ski-out Mountain Club luxury condos, private guided cornice drops, and off-grid mountain tranquility."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 10 – March 15 (Highest base elevation in Tahoe keeps snow light, dry, and cold)",
+      crowdFreeWindow: "Mid-week non-holiday days (wide-open chutes and zero lift lines)",
+      topEvents: [
+        { name: "Kirkwood Banked Slalom", timing: "Late March", desc: "High-adrenaline snowboard and freeski race through natural gullies." },
+        { name: "The Wall Challenge", timing: "Mid-April", desc: "Spring freeride showcase tackling Chair 10's iconic steep face." }
+      ]
+    },
+    description: "A legendary freeride mecca perched atop Carson Pass. Highest base elevation in Tahoe (7,800') yields the region's lightest snow, famous natural wave cornices, and relentless double-black terrain."
+  },
+  {
+    id: "sierra-at-tahoe",
+    name: "Sierra-at-Tahoe Resort",
+    region: "California / Lake Tahoe (Echo Summit)",
+    state: "CA",
+    pass: "Independent",
+    annualSnowfall: 400,
+    verticalDrop: 2212,
+    skiableAcres: 2000,
+    elevation: { base: 6640, summit: 8852 },
+    terrain: { beginner: 25, intermediate: 50, advanced: 25 },
+    vibe: ["local-vibes", "chill-authentic", "friends-vacation", "powder-hunting"],
+    climateZone: "Sierra Nevada",
+    laNinaFactor: 0.95,
+    elNinoFactor: 1.15,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "Huckleberry Canyon (5 backcountry gates) & Preacher's Passion",
+    nearestAirport: "Reno-Tahoe Intl (RNO)",
+    airportDriveMins: 75,
+    nearestMajorHub: "San Francisco, CA (3.0h drive via US-50)",
+    apresHighlights: ["The Sierra Pub (Live Music & Tahoe Ales)", "Baja Grill Deck", "360 Smokehouse BBQ"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "Sierra Backcountry Experience",
+      luxuryHighlights: "Private canyon guide services, South Lake Tahoe boutique cabin lodges, and relaxed local hospitality."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 15 – March 10 (Echo Summit storm tracks deposit deep powder in Huckleberry Canyon)",
+      crowdFreeWindow: "Mid-week Tuesday through Thursday",
+      topEvents: [
+        { name: "Subaru WinterFest", timing: "Early March", desc: "Live indie concerts, gear demos, craft beverage tastings on the plaza." },
+        { name: "Sno-Flings Spring Bash", timing: "Mid-April", desc: "Pond skim, costume contest, and sunny spring patio vibes." }
+      ]
+    },
+    description: "South Lake Tahoe's beloved independent mountain. Famous for soulful local culture, 320 acres of guided backcountry terrain in Huckleberry Canyon, and world-class tree skiing."
+  },
+  {
+    id: "homewood",
+    name: "Homewood Mountain Resort",
+    region: "California / West Shore Lake Tahoe",
+    state: "CA",
+    pass: "Independent",
+    annualSnowfall: 400,
+    verticalDrop: 1650,
+    skiableAcres: 1260,
+    elevation: { base: 6230, summit: 7880 },
+    terrain: { beginner: 15, intermediate: 40, advanced: 45 },
+    vibe: ["local-vibes", "chill-authentic", "scenic-views", "friends-vacation"],
+    climateZone: "Sierra Nevada",
+    laNinaFactor: 0.95,
+    elNinoFactor: 1.15,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "Rainbow Ridge (Top-to-bottom panoramic lake run) & Hobo's Glades",
+    nearestAirport: "Reno-Tahoe Intl (RNO)",
+    airportDriveMins: 60,
+    nearestMajorHub: "San Francisco, CA (3.5h drive via I-80 / CA-89)",
+    apresHighlights: ["West Shore Cafe (Waterfront dining)", "Chambers Landing Bar", "Big Blue View Bar"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "Homewood Snowcat Adventures (Ellis Peak Backcountry)",
+      luxuryHighlights: "Lakeside luxury dining at West Shore Cafe, private snowcat tours to Ellis Peak summit with unmatched 360° Lake Tahoe views."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 20 – March 15 (Protected West Shore tree glades stay deep and wind-sheltered during big storms)",
+      crowdFreeWindow: "Any weekday (zero lift lines, peaceful uncrowded slopes)",
+      topEvents: [
+        { name: "Homewood Snowcat Powder Excursions", timing: "Peak Winter", desc: "Exclusive snowcat trips to Ellis Peak backcountry with lake vistas." },
+        { name: "Spring Pond Skim & BBQ", timing: "Mid-April", desc: "Classic West Shore family and locals spring skiing party." }
+      ]
+    },
+    description: "Where the mountain literally touches the water. Homewood delivers the most stunning panoramic Lake Tahoe views in California, protected tree powder stashes, and an authentic, unhurried West Shore vibe."
+  },
+  {
+    id: "mt-rose",
+    name: "Mount Rose - Ski Tahoe",
+    region: "Nevada / Lake Tahoe (Carson Range)",
+    state: "NV",
+    pass: "Independent",
+    annualSnowfall: 350,
+    verticalDrop: 1800,
+    skiableAcres: 1200,
+    elevation: { base: 8260, summit: 9700 },
+    terrain: { beginner: 20, intermediate: 30, advanced: 50 },
+    vibe: ["local-vibes", "gnarly-steeps", "powder-hunting", "chill-authentic"],
+    climateZone: "Sierra Nevada",
+    laNinaFactor: 0.95,
+    elNinoFactor: 1.15,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "The Chutes (1,500' continuous 40–55° sustained pitch: Nightmare & El Cap)",
+    nearestAirport: "Reno-Tahoe Intl (RNO)",
+    airportDriveMins: 25,
+    nearestMajorHub: "San Francisco, CA (3.5h drive via I-80 / NV-431)",
+    apresHighlights: ["Timbers Bar", "Winters Creek Lodge Deck", "Rose Chalet Saloon"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "Mt. Rose Chutes Guided Clinic",
+      luxuryHighlights: "Easy access to Reno 5-star resort casinos & Incline Village private lakefront retreats."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 10 – March 15 (Tahoe's highest base at 8,260' keeps snow completely dry and cold)",
+      crowdFreeWindow: "Tuesday–Thursday mornings",
+      topEvents: [
+        { name: "Chutes Extreme Challenge", timing: "Late March", desc: "Local freeriders tackle 1,500 vertical feet of 50-degree steeps in The Chutes." },
+        { name: "Retro 80s Spring Splash", timing: "Early April", desc: "Spring costumes, live DJ sets, and sun laps on Northwest Magnum 6." }
+      ]
+    },
+    description: "Tahoe's highest base elevation (8,260') resort offering rapid dry powder cycles, unmatched 25-minute proximity to Reno airport, and the ferocious 1,500-vertical-foot steep Chutes."
+  },
+  {
+    id: "bear-valley",
+    name: "Bear Valley Mountain Resort",
+    region: "California / Central Sierra (Highway 4)",
+    state: "CA",
+    pass: "Independent",
+    annualSnowfall: 359,
+    verticalDrop: 1900,
+    skiableAcres: 1680,
+    elevation: { base: 6600, summit: 8500 },
+    terrain: { beginner: 25, intermediate: 40, advanced: 35 },
+    vibe: ["local-vibes", "chill-authentic", "family-convenient", "friends-vacation"],
+    climateZone: "Sierra Nevada",
+    laNinaFactor: 0.95,
+    elNinoFactor: 1.18,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "Grizzly Bowl & Snow Valley Chutes",
+    nearestAirport: "Sacramento Intl (SMF) / Stockton (SCK)",
+    airportDriveMins: 110,
+    nearestMajorHub: "San Francisco, CA (3.0h drive via CA-4)",
+    apresHighlights: ["Bear Valley Lodge Cathedral Lounge", "Monte Wolfe Saloon", "Sky High Pizza"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "Bear Valley Snowcat & Backcountry Touring",
+      luxuryHighlights: "Historic Bear Valley Lodge, private mountain chalets, uncrowded wilderness trails in Stanislaus National Forest."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 15 – March 10 (Pacific atmospheric river storms hammer Ebbetts Pass)",
+      crowdFreeWindow: "Mid-week non-holidays (essentially private mountain experience)",
+      topEvents: [
+        { name: "Bear Valley Music & Winter Carnival", timing: "Late February", desc: "Live music, torchlight parade, and mountain village festivities." },
+        { name: "Spring Splash Down Pond Skim", timing: "Mid-April", desc: "Classic High Sierra spring pond skimming and deck BBQ." }
+      ]
+    },
+    description: "An uncrowded Central Sierra gem on scenic Highway 4. Offers rugged steeps in Grizzly Bowl, wide-open family cruisers, and a peaceful, authentic mountain community free of mega-resort commercialism."
+  },
+  {
+    id: "dodge-ridge",
+    name: "Dodge Ridge Mountain Resort",
+    region: "California / Central Sierra (Highway 108)",
+    state: "CA",
+    pass: "Independent",
+    annualSnowfall: 300,
+    verticalDrop: 1600,
+    skiableAcres: 862,
+    elevation: { base: 6600, summit: 8200 },
+    terrain: { beginner: 20, intermediate: 40, advanced: 40 },
+    vibe: ["local-vibes", "chill-authentic", "family-convenient"],
+    climateZone: "Sierra Nevada",
+    laNinaFactor: 0.95,
+    elNinoFactor: 1.15,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "Granite Bowl & The Face",
+    nearestAirport: "Sacramento Intl (SMF) / Modesto (MOD)",
+    airportDriveMins: 95,
+    nearestMajorHub: "San Francisco / Bay Area (2.75h drive / 155 mi via CA-108)",
+    apresHighlights: ["Way Station Lounge", "Boulder Bar Deck", "Mia's Tavern in Pinecrest"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "Dodge Ridge Mountain Guides",
+      luxuryHighlights: "Cozy private pine cabins in nearby Pinecrest Lake, uncrowded skiing, and relaxed family-friendly atmosphere."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 15 – February 28 (Quick storm access directly from Central Valley / Bay Area)",
+      crowdFreeWindow: "Monday through Thursday (zero lift queues)",
+      topEvents: [
+        { name: "Pinecrest Winter Festival", timing: "Mid-February", desc: "Community races, evening fireworks, and family fun." },
+        { name: "Dodge Ridge Spring Jam", timing: "Early April", desc: "Spring terrain park jam and outdoor deck celebration." }
+      ]
+    },
+    description: "The closest ski mountain to Central California and the Bay Area (under 3 hours). Beloved for relaxed family-owned hospitality, scenic Stanislaus National Forest tree glades, and pure grassroots California skiing."
+  },
+  {
+    id: "diamond-peak",
+    name: "Diamond Peak Ski Resort",
+    region: "Nevada / North Lake Tahoe (Incline Village)",
+    state: "NV",
+    pass: "Independent",
+    annualSnowfall: 325,
+    verticalDrop: 1840,
+    skiableAcres: 655,
+    elevation: { base: 6700, summit: 8540 },
+    terrain: { beginner: 15, intermediate: 35, advanced: 50 },
+    vibe: ["local-vibes", "chill-authentic", "scenic-views", "family-convenient"],
+    climateZone: "Sierra Nevada",
+    laNinaFactor: 0.95,
+    elNinoFactor: 1.15,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "Crystal Ridge (Unbroken panoramic Lake Tahoe view run)",
+    nearestAirport: "Reno-Tahoe Intl (RNO)",
+    airportDriveMins: 40,
+    nearestMajorHub: "San Francisco, CA (3.5h drive via I-80 / CA-267)",
+    apresHighlights: ["Snowflake Lodge Sun Deck", "The Loft Bar", "Alibi Ale Works Incline Brewery"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "Diamond Peak Private Clinics",
+      luxuryHighlights: "Hyatt Regency Lake Tahoe Resort & Spa (Incline Village), private lakeside chalets, and Snowflake Lodge panoramic wine receptions."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 15 – March 10 (Crystal Quad glades hold cold, dry powder)",
+      crowdFreeWindow: "Midweek non-holiday mornings",
+      topEvents: [
+        { name: "Dummy Downhill", timing: "Late March", desc: "Legendary wacky event where homemade dummies on skis launch off a giant jump." },
+        { name: "Luggi Foeger Uphill/Downhill Festival", timing: "Late March", desc: "Community skimo race and costume spring festival." }
+      ]
+    },
+    description: "Community-owned Incline Village hidden gem featuring some of the most breathtaking top-to-bottom Lake Tahoe vistas on earth, affordable uncrowded slopes, and unpretentious local charm."
+  },
+  {
+    id: "grand-targhee",
+    name: "Grand Targhee Resort",
+    region: "Wyoming / West Tetons",
+    state: "WY",
+    pass: "Independent",
+    annualSnowfall: 500,
+    verticalDrop: 2270,
+    skiableAcres: 2600,
+    elevation: { base: 7851, summit: 9862 },
+    terrain: { beginner: 10, intermediate: 70, advanced: 20 },
+    vibe: ["local-vibes", "powder-hunting", "chill-authentic", "friends-vacation"],
+    climateZone: "Northern Rockies",
+    laNinaFactor: 1.15,
+    elNinoFactor: 0.92,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "Sacajawea Glades, The Good, The Bad & The Ugly",
+    nearestAirport: "Jackson Hole (JAC) / Idaho Falls (IDA)",
+    airportDriveMins: 75,
+    nearestMajorHub: "Salt Lake City (SLC) - 4.5h drive",
+    apresHighlights: ["The Trap Bar & Grill (Famous live bluegrass & spicy bloody marys)", "Snorkel's Cafe", "Branding Iron"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "Grand Targhee Snowcat Adventures (Peaked Mountain Private Buyouts)",
+      luxuryHighlights: "Targhee Slopeside Lodges, exclusive 602-acre private snowcat tenure on Peaked Mountain, uncrowded powder freedom."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 1 – March 15 (Consistent western Teton orographic storm cycles deliver endless refills)",
+      crowdFreeWindow: "Virtually every weekday (famous for zero lift lines)",
+      topEvents: [
+        { name: "Targhee Powder Cat Showcase", timing: "Mid-Winter", desc: "Private cat skiing days across untracked Peaked Mountain bowls." },
+        { name: "Spring Break Beach Bash", timing: "Early April", desc: "Trap Bar patio concerts, costume pond skimming, and sunny spring corn." }
+      ]
+    },
+    description: "The powder capital of the West Tetons. Averaging over 500 inches of ultra-light Rocky Mountain blower snow with zero lift lines, expansive open bowls, and an authentic, soulful ski culture."
+  },
+  {
+    id: "bridger-bowl",
+    name: "Bridger Bowl Ski Area",
+    region: "Montana / Northern Rockies (Bozeman)",
+    state: "MT",
+    pass: "Independent",
+    annualSnowfall: 350,
+    verticalDrop: 2700,
+    skiableAcres: 2000,
+    elevation: { base: 6100, summit: 8800 },
+    terrain: { beginner: 20, intermediate: 30, advanced: 50 },
+    vibe: ["local-vibes", "gnarly-steeps", "powder-hunting", "chill-authentic"],
+    climateZone: "Northern Rockies",
+    laNinaFactor: 1.18,
+    elNinoFactor: 0.88,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "The Ridge (Beacon required: Hidden Gully, Fingers, & Northwest Couloir)",
+    nearestAirport: "Bozeman Yellowstone Intl (BZN)",
+    airportDriveMins: 25,
+    nearestMajorHub: "Bozeman, MT (20m drive)",
+    apresHighlights: ["Jimmy B's Bar & Grill", "Face Shots Lounge", "Bridger Brewing (Bozeman)"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "Bridger Bowl Ridge Freeride Guides",
+      luxuryHighlights: "Bozeman historic boutique hotels (The Kimpton Armory), private backcountry touring guides, and genuine Montana hospitality."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 10 – March 1 (Famous 'Cold Smoke' ultra-dry low-density powder cycles)",
+      crowdFreeWindow: "Midweek non-college break days",
+      topEvents: [
+        { name: "Bridger Gully Freeride", timing: "Late February", desc: "Premier extreme freeride competition down the technical Ridge chutes." },
+        { name: "King & Queen of the Ridge", timing: "Mid-February", desc: "Legendary uphill hike-and-ski vertical challenge fundraiser." }
+      ]
+    },
+    description: "A legendary community-owned non-profit ski area in Bozeman. Renowned worldwide for its beacon-required extreme hike-to Ridge terrain, legendary 'Cold Smoke' powder, and pure grassroots mountain soul."
+  },
+  {
+    id: "arapahoe-basin",
+    name: "Arapahoe Basin ('A-Basin / The Legend')",
+    region: "Colorado / Front Range (Loveland Pass)",
+    state: "CO",
+    pass: "Ikon",
+    annualSnowfall: 350,
+    verticalDrop: 2530,
+    skiableAcres: 1428,
+    elevation: { base: 10780, summit: 13050 },
+    terrain: { beginner: 7, intermediate: 20, advanced: 73 },
+    vibe: ["local-vibes", "gnarly-steeps", "chill-authentic", "friends-vacation"],
+    climateZone: "Colorado Rockies",
+    laNinaFactor: 1.05,
+    elNinoFactor: 1.05,
+    bestMonths: ["February", "March", "April", "May"],
+    signatureRun: "The East Wall, Pallavicini (Pali Face), & The Steep Gullies",
+    nearestAirport: "Denver Intl (DEN)",
+    airportDriveMins: 85,
+    nearestMajorHub: "Denver, CO (1.25h drive via I-70)",
+    apresHighlights: ["The Beach (Legendary slopeside tailgate scene)", "6th Alley Bar & Grill (famous Bacon Bloody Mary)", "Black Mountain Lodge"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "A-Basin Steep & Deep Extreme Guides",
+      luxuryHighlights: "Private cliffside dinners at Black Mountain Lodge (elevation 12,500'), VIP Pali guide tours, and Keystone/Breckenridge luxury chalets."
+    },
+    bestTimingGuide: {
+      powderWindow: "February 1 – April 30 (Highest elevation in North America ensures continuous cold dry snow and the longest season into June)",
+      crowdFreeWindow: "Mid-week Tuesday–Thursday (A-Basin strictly caps daily season pass numbers to prevent crowds)",
+      topEvents: [
+        { name: "Pali Enduro", timing: "Late April", desc: "Skiers complete maximum laps on the grueling Pallavicini lift in 10 hours." },
+        { name: "Swimsuit Beach Days & Spring Rail Jam", timing: "May into June", desc: "Famous end-of-season tailgate party, spring corn laps, and costumes." }
+      ]
+    },
+    description: "Known simply as 'The Legend'. High-altitude alpine powerhouse (13,050' summit) with ferocious chutes, legendary Pallavicini chair laps, tailgate culture on 'The Beach', and the longest season in Colorado."
+  },
+  {
+    id: "mad-river-glen",
+    name: "Mad River Glen ('Ski It If You Can')",
+    region: "Vermont / Green Mountains (Mad River Valley)",
+    state: "VT",
+    pass: "Independent",
+    annualSnowfall: 250,
+    verticalDrop: 2000,
+    skiableAcres: 115,
+    elevation: { base: 1600, summit: 3637 },
+    terrain: { beginner: 20, intermediate: 35, advanced: 45 },
+    vibe: ["local-vibes", "chill-authentic", "gnarly-steeps"],
+    climateZone: "Northeast",
+    laNinaFactor: 1.00,
+    elNinoFactor: 1.00,
+    bestMonths: ["January", "February", "March"],
+    signatureRun: "Paradise (steepest tree run in the East with a 38-degree frozen waterfall drop)",
+    nearestAirport: "Burlington Intl (BTV)",
+    airportDriveMins: 50,
+    nearestMajorHub: "Boston, MA - 3.5h drive",
+    apresHighlights: ["General Stark's Pub", "Lawson's Finest Liquids Taproom (Waitsfield)", "Mad River Barn"],
+    heliAndLuxury: {
+      hasHeli: false,
+      operator: "MRG Natural Terrain Telemark & Freeride Academy",
+      luxuryHighlights: "Historic Pitcher Inn (Relais & Châteaux), quintessential Vermont covered bridge chalets, and roaring fireplace pubs."
+    },
+    bestTimingGuide: {
+      powderWindow: "January 25 – March 15 (Natural snow preservation along the Stark Mountain ridgeline)",
+      crowdFreeWindow: "Mid-week (Single Chair wait is less than 2 minutes)",
+      topEvents: [
+        { name: "Unrestricted Freeskiing Challenge", timing: "Early March", desc: "Top East Coast freeriders send cliffs and chutes under the Single Chair." },
+        { name: "Town Meeting Day Celebration", timing: "First Tuesday in March", desc: "Co-op shareholder appreciation day and mountain rally." }
+      ]
+    },
+    description: "A cooperative-owned temple of pure skiing with its iconic Single Chair, 100% natural snow surfaces, narrow technical glades, and famous uncompromising motto: 'Ski It If You Can'."
   }
 ];
 

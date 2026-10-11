@@ -1,0 +1,106 @@
+{
+  "tuples": [
+    {
+      "dimension_values": {
+        "trip_vibe_and_goal": "powder_hunting_storm_chase",
+        "skier_ability_level": "expert_freerider",
+        "pass_affiliation": "ikon_pass",
+        "origin_and_travel_logistics": "fly_short_haul_direct",
+        "snow_priority_and_season_timing": "deepest_snowpack_storm_chase",
+        "group_dynamic_and_party_size": "friends_crew_powder_chasers",
+        "query_style_and_specificity": "concise_direct_inquiry",
+        "target_geographic_region": "utah_wasatch"
+      },
+      "input": {
+        "skillLevel": "expert_freerider",
+        "groupGoal": [
+          "powder_hunting_storm_chase",
+          "gnarly_lines_and_steeps"
+        ],
+        "snowPriority": "deepest_snowpack_storm_chase",
+        "travelMode": "fly_short_haul_direct",
+        "homeLocation": "San Francisco, CA (SFO)",
+        "passAffiliation": "ikon_pass",
+        "groupSize": "4 skiers",
+        "userQuery": "Tracking a major atmospheric river hitting northern Utah mid-January. We have Ikon Base passes, flying into SLC from SFO for 4 days, looking for the deepest powder stashes, steep chutes, and minimal canyon transit hassle."
+      },
+      "expected": {
+        "pass": "ikon_pass",
+        "min_advanced_terrain": 40,
+        "required_vibes": [
+          "powder_hunting_storm_chase",
+          "gnarly_lines_and_steeps"
+        ],
+        "description": "Expert freeride squad chasing storm totals in the Wasatch on Ikon Base (targeting Snowbird or Brighton/Solitude with 4x4 canyon protocol)."
+      }
+    },
+    {
+      "dimension_values": {
+        "trip_vibe_and_goal": "family_friendly_vacation",
+        "skier_ability_level": "mixed_ability_group",
+        "pass_affiliation": "epic_pass",
+        "origin_and_travel_logistics": "fly_regional_mountain_airport",
+        "snow_priority_and_season_timing": "weather_immune_groomers",
+        "group_dynamic_and_party_size": "family_with_young_kids",
+        "query_style_and_specificity": "complex_conflicting_constraints",
+        "target_geographic_region": "colorado_rockies"
+      },
+      "input": {
+        "skillLevel": "mixed_ability_group",
+        "groupGoal": [
+          "family_friendly_vacation",
+          "cruisers_groomers_relaxed"
+        ],
+        "snowPriority": "weather_immune_groomers",
+        "travelMode": "fly_regional_mountain_airport",
+        "homeLocation": "Chicago, IL (ORD)",
+        "passAffiliation": "epic_pass",
+        "groupSize": "Family of 4 (2 adults, kids ages 4 and 7)",
+        "userQuery": "Looking for an Epic Pass trip flying directly into Eagle County (EGE). We need top-tier ski school for a 4-year-old beginner, pristine wide corduroy groomers for an intermediate mom, challenging off-piste bowls for an advanced dad, ski-in/ski-out lodging, and zero rental car dependency."
+      },
+      "expected": {
+        "pass": "epic_pass",
+        "min_advanced_terrain": 20,
+        "required_vibes": [
+          "family_friendly_vacation",
+          "cruisers_groomers_relaxed"
+        ],
+        "description": "Family winter getaway requiring ski school, pedestrian village convenience, and diverse terrain split at Beaver Creek or Vail."
+      }
+    },
+    {
+      "dimension_values": {
+        "trip_vibe_and_goal": "budget_independent_soul",
+        "skier_ability_level": "solid_advanced",
+        "pass_affiliation": "indy_pass",
+        "origin_and_travel_logistics": "drive_local_sub_3hr",
+        "snow_priority_and_season_timing": "peak_winter_cold_smoke_jan_feb",
+        "group_dynamic_and_party_size": "solo_skier_powder_hound",
+        "query_style_and_specificity": "short_keywords_minimal_detail",
+        "target_geographic_region": "pacific_northwest_cascades"
+      },
+      "input": {
+        "skillLevel": "solid_advanced",
+        "groupGoal": [
+          "budget_independent_soul",
+          "powder_hunting_storm_chase"
+        ],
+        "snowPriority": "peak_winter_cold_smoke_jan_feb",
+        "travelMode": "drive_local_sub_3hr",
+        "homeLocation": "Seattle, WA",
+        "passAffiliation": "indy_pass",
+        "groupSize": "1 solo rider",
+        "userQuery": "indy pass seattle sub 3hr drive jan powder uncrowded steep trees cheap cabin"
+      },
+      "expected": {
+        "pass": "indy_pass",
+        "min_advanced_terrain": 30,
+        "required_vibes": [
+          "budget_independent_soul",
+          "powder_hunting_storm_chase"
+        ],
+        "description": "Solo advanced storm rider seeking uncrowded independent PNW terrain like Mission Ridge or White Pass on Indy Pass within driving range."
+      }
+    }
+  ]
+}

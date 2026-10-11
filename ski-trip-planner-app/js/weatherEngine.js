@@ -319,8 +319,11 @@ export class WeatherMatchingEngine {
       passAffiliation = "any"
     } = preferences;
 
-    // IF Epic Splurge / Heli-Luxury is selected, evaluate dedicated Heli-Ski & Snowcat operations!
-    if (groupGoal === "heli-luxury") {
+    // Normalize groupGoal into an array for multi-select
+    const goals = Array.isArray(groupGoal) ? groupGoal : [groupGoal || "gnarly-lines"];
+
+    // IF Epic Splurge / Heli-Luxury is exclusively selected, evaluate dedicated Heli-Ski & Snowcat operations!
+    if (goals.includes("heli-luxury") && goals.length === 1) {
       return this.evaluateHeliExpeditions(preferences);
     }
 
@@ -331,7 +334,7 @@ export class WeatherMatchingEngine {
       candidateResorts = RESORTS.filter(resort => {
         const resortPass = resort.pass.toLowerCase();
         if (passTarget === "independent" || passTarget === "indy") {
-          return resortPass.includes("independent") || resortPass.includes("indy");
+          return resortPass.includes("independent") || resortPass.includes("indy") || resortPass.includes("co-op");
         }
         return resortPass.includes(passTarget);
       });
@@ -360,23 +363,37 @@ export class WeatherMatchingEngine {
         scoreBreakdown.push({ label: "Steep / Expert Terrain", pts });
       }
 
-      // 2. Vibe & Trip Goal Match (Max 25 pts)
-      let vibePts = 5;
-      if (groupGoal === "gnarly-lines") {
-        if (resort.vibe.includes("gnarly-steeps")) vibePts += 15;
-        if (resort.vibe.includes("powder-hunting")) vibePts += 5;
-      } else if (groupGoal === "party-apres") {
-        if (resort.vibe.includes("party-apres")) vibePts += 15;
-        if (resort.vibe.includes("friends-vacation")) vibePts += 5;
-      } else if (groupGoal === "friends-vacation") {
-        if (resort.vibe.includes("friends-vacation")) vibePts += 12;
-        if (resort.vibe.includes("cruisers-groomers") || resort.vibe.includes("party-apres")) vibePts += 8;
-      } else {
-        if (resort.vibe.includes("family-convenient") || resort.vibe.includes("cruisers-groomers")) vibePts += 20;
-      }
-      vibePts = Math.min(25, vibePts);
+      // 2. Vibe & Multi-Goal Match (Max 25 pts)
+      let rawVibePts = 0;
+      const resortVibes = resort.vibe || [];
+      const isIndependent = resort.pass.toLowerCase().includes("independent") || resort.pass.toLowerCase().includes("indy");
+
+      goals.forEach(goal => {
+        if (goal === "gnarly-lines") {
+          if (resortVibes.includes("gnarly-steeps")) rawVibePts += 15;
+          if (resortVibes.includes("powder-hunting")) rawVibePts += 6;
+        } else if (goal === "local-vibes") {
+          if (resortVibes.includes("local-vibes")) rawVibePts += 16;
+          if (resortVibes.includes("chill-authentic")) rawVibePts += 10;
+          if (isIndependent) rawVibePts += 8;
+        } else if (goal === "party-apres") {
+          if (resortVibes.includes("party-apres")) rawVibePts += 15;
+          if (resortVibes.includes("friends-vacation")) rawVibePts += 5;
+        } else if (goal === "friends-vacation") {
+          if (resortVibes.includes("friends-vacation")) rawVibePts += 12;
+          if (resortVibes.includes("cruisers-groomers") || resortVibes.includes("chill-authentic")) rawVibePts += 8;
+        } else if (goal === "family-convenient") {
+          if (resortVibes.includes("family-convenient") || resortVibes.includes("cruisers-groomers")) rawVibePts += 16;
+        } else if (goal === "heli-luxury") {
+          if (resortVibes.includes("heli-luxury") || resort.heliAndLuxury?.hasHeli) rawVibePts += 16;
+        }
+      });
+
+      // Normalize vibe score across selected goals
+      const maxPossibleVibe = goals.length * 18;
+      const vibePts = Math.min(25, Math.max(6, Math.round((rawVibePts / Math.max(1, maxPossibleVibe)) * 25)));
       score += vibePts;
-      scoreBreakdown.push({ label: "Trip Goal & Vibe", pts: vibePts });
+      scoreBreakdown.push({ label: "Trip Mission & Vibe", pts: vibePts });
 
       // 3. Snow Forecast & Quality (Max 30 pts)
       const forecast = this.getForecastSummary(resort);
@@ -389,7 +406,7 @@ export class WeatherMatchingEngine {
         else if (projectedSnow >= 320) snowPts = 20;
         else snowPts = 14;
       } else if (snowPriority === "groomers") {
-        if (resort.elevation.base >= 7000 || resort.vibe.includes("cruisers-groomers")) snowPts = 28;
+        if (resort.elevation.base >= 7000 || resortVibes.includes("cruisers-groomers")) snowPts = 28;
         else snowPts = 20;
       } else {
         snowPts = 22;
@@ -398,23 +415,54 @@ export class WeatherMatchingEngine {
       scoreBreakdown.push({ label: "Snow & Weather Forecast", pts: snowPts });
 
       // 4. Pass Affiliation (Max 10 pts)
-      let passPts = 10;
+      let passPts = 8;
+      if (passAffiliation && passAffiliation !== "any") {
+        const pLower = passAffiliation.toLowerCase();
+        if (resort.pass.toLowerCase().includes(pLower)) passPts = 10;
+        else passPts = 5;
+      } else {
+        passPts = 10;
+      }
       score += passPts;
       scoreBreakdown.push({ label: "Pass Compatibility", pts: passPts });
 
-      // 5. Travel Logistics / Proximity (Max 10 pts)
+      // 5. Travel Logistics / Proximity & Driving Distance (Max 10 pts)
       let travelPts = 5;
       const lowerHome = homeLocation.toLowerCase();
-      const isWestCoast = lowerHome.includes("san francisco") || lowerHome.includes("sf") || lowerHome.includes("seattle") || lowerHome.includes("los angeles") || lowerHome.includes("la") || lowerHome.includes("bay area");
+      const isSFBayArea = lowerHome.includes("san francisco") || lowerHome.includes("sf") || lowerHome.includes("bay area") || lowerHome.includes("oakland") || lowerHome.includes("san jose") || lowerHome.includes("sacramento") || lowerHome.includes("berkeley");
+      const isWestCoast = isSFBayArea || lowerHome.includes("seattle") || lowerHome.includes("los angeles") || lowerHome.includes("la") || lowerHome.includes("portland");
       const isDenver = lowerHome.includes("denver") || lowerHome.includes("boulder") || lowerHome.includes("colorado");
-      const isEastCoast = lowerHome.includes("new york") || lowerHome.includes("nyc") || lowerHome.includes("boston") || lowerHome.includes("philadelphia");
+      const isEastCoast = lowerHome.includes("new york") || lowerHome.includes("nyc") || lowerHome.includes("boston") || lowerHome.includes("philadelphia") || lowerHome.includes("vermont");
 
       if (travelMode === "drive") {
-        if (isWestCoast && (resort.state === "CA" || resort.state === "WA" || (lowerHome.includes("seattle") && resort.state === "BC"))) travelPts = 10;
-        else if (isDenver && resort.state === "CO") travelPts = 10;
-        else if (isEastCoast && resort.state === "VT") travelPts = 10;
-        else travelPts = 2;
+        if (isSFBayArea) {
+          // Lake Tahoe & Sierra Nevada driving distance from SF Bay Area
+          const hubDesc = (resort.nearestMajorHub || "").toLowerCase();
+          const isNorCalDrive = resort.state === "CA" || resort.state === "NV" || hubDesc.includes("san francisco") || hubDesc.includes("bay area");
+          if (isNorCalDrive) {
+            if (resort.id === "sugar-bowl" || resort.id === "kirkwood" || resort.id === "sierra-at-tahoe" || resort.id === "bear-valley" || resort.id === "dodge-ridge" || resort.id === "homewood" || resort.id === "palisades-tahoe" || resort.id === "mt-rose" || resort.id === "diamond-peak") {
+              travelPts = 10; // Prime <= 3.5 hr drive from SF
+            } else if (resort.id === "mammoth") {
+              travelPts = 8; // 5-6 hr drive from SF
+            } else {
+              travelPts = 9;
+            }
+          } else {
+            travelPts = 2; // Non-driving distance for SF
+          }
+        } else if (isDenver && (resort.state === "CO" || resort.state === "WY")) {
+          travelPts = 10;
+        } else if (isEastCoast && (resort.state === "VT" || resort.region.includes("Northeast"))) {
+          travelPts = 10;
+        } else if (lowerHome.includes("seattle") && (resort.state === "WA" || resort.state === "BC" || resort.state === "OR")) {
+          travelPts = 10;
+        } else if (isWestCoast && (resort.state === "CA" || resort.state === "WA" || resort.state === "NV")) {
+          travelPts = 9;
+        } else {
+          travelPts = 2;
+        }
       } else {
+        // Fly mode
         if (resort.airportDriveMins <= 45) travelPts = 10;
         else if (resort.airportDriveMins <= 90) travelPts = 8;
         else travelPts = 6;

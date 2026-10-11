@@ -5,7 +5,12 @@
   "main": "index.html",
   "scripts": {
     "dev": "npx -y serve . -p 3000",
-    "start": "npx -y serve . -p 3000"
+    "start": "npx -y serve . -p 3000",
+    "eval": "python3 evals/run_all_evals.py",
+    "eval:planner": "python3 evals/eval_trip_planner.py",
+    "eval:search": "python3 evals/eval_deep_search.py",
+    "eval:refine": "python3 evals/eval_refine_trip.py",
+    "eval:generate": "python3 evals/generate_tuples.py"
   },
   "keywords": [
     "ski",

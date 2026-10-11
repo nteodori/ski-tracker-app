@@ -1,2 +1,18 @@
 .DS_Store
 git_test/
+
+# Environment Variables & Secrets
+.env
+.env.*
+.env.local
+.env.*.local
+!.env.example
+
+# Python Cache & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+ENV/
